@@ -100,7 +100,7 @@ loadCountsFromH5FileHSDS <- function(es, url, file, sample_id = NULL, gene_id = 
                            phenoData = phenoData(es[, !is.na(sampleIndexes)]),
                            annotation = annotation(es),
                            experimentData = experimentData(es))
-  experimentData(es)@preprocessing$gene_counts_source <- file
+  experimentData(es2)@preprocessing$gene_counts_source <- file
   if (!toupper(gene_id_type) == "GENE SYMBOL") {
     tryCatch({
       gene_symbol <- HSDSDataset(f, "/meta/genes/gene_symbol")
