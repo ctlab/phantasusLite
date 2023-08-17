@@ -1,0 +1,20 @@
+#1.3
+10	4	3	7
+id	GB_ACC	symbol	mean	GSM1538541	GSM1538542	GSM1538543	GSM1538547
+Title	na	na	na	NCSC_7dupASD2-C2 (GDB-242_J)	NCSC_7dupASD2-C1 (GDB-242_K)	NCSC_7dupASD1-C2 (GDB-CF_G)	NCSC_CTL3-C1 (Bu1Cr3-1)
+Source Name	na	na	na	Neural Crest Stem Cells (NCSC), iPSC-derived	Neural Crest Stem Cells (NCSC), iPSC-derived	Neural Crest Stem Cells (NCSC), iPSC-derived	Neural Crest Stem Cells (NCSC), iPSC-derived
+gender	na	na	na	female	female	male	male
+genotype	na	na	na	7dupASD	7dupASD	7dupASD	Control
+donor	na	na	na	GDB-242	GDB-242	GDB-CF	Bu1
+cell type	na	na	na	Neural Crest Stem Cells (NCSC), iPSC-derived	Neural Crest Stem Cells (NCSC), iPSC-derived	Neural Crest Stem Cells (NCSC), iPSC-derived	Neural Crest Stem Cells (NCSC), iPSC-derived
+array id	na	na	na	0X	1X	2X	6X
+XM_005248884.1_at	XM_005248884	na	11.95	12.17	12.01	12.03	11.86
+NR_015380.1_at	NR_015380	A1BG-AS1	5.14	5.18	5.19	4.91	5.41
+NM_000014.4_at	NM_000014	A2M	7.13	9.23	8.47	10.45	10.1
+NM_001173466.1_at	NM_001173466	AAAS	9.29	9.68	9.45	9.5	9.53
+NM_023928.3_at	NM_023928	AACS	7.52	7.38	7.52	7.57	7.63
+NM_023928.4_at	NM_023928	AACS	8.64	8.81	8.94	8.9	8.7
+NM_153698.1_at	NM_153698	AAED1	6.9	7.63	7.04	7.63	7.4
+NM_001271886.1_at	NM_001271886	AAGAB	7.13	7.24	7.1	7.35	7.3
+NM_014911.3_at	NM_014911	AAK1	7.61	7.48	7.72	7.46	7.38
+NM_024684.2_at	NM_024684	AAMDC	7.2	6.9	6.99	7.03	6.68
