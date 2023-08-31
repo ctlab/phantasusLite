@@ -45,7 +45,7 @@ To run the package enter the code sample below.
 Let's load the ExpressionSet from GEO
 
 ```{r message=FALSE}
-ess <- getGEO("GSE85653")
+ess <- getGEO("GSE53053")
 es <- ess[[1]]
 ```
 
