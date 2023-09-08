@@ -24,10 +24,7 @@ getSamples <- function(h5f, samples_id) {
 #' @param es, containing ExpressionSet loaded from GEO. Contains empty expression matrix.
 #'
 #' @param url, containing url of the server and root domain.
-#' @param file, containing name of the file
-#' @param sample_id, containing path to the dataset with sample ids
-#' @param gene_id, containing path to the dataset with gene ids
-#' @param gene_id_type, containing path to the dataset with gene id type
+#' @param file, containing name of the file (relative to the root domain)
 #' @param sampleIndexes, containing sample indexes list
 #'
 #' @return ExpressionSet object with loaded count matrix
@@ -35,87 +32,86 @@ getSamples <- function(h5f, samples_id) {
 #' @export
 #' @import data.table
 #' @import rhdf5client
-loadCountsFromH5FileHSDS <- function(es, url, file, sample_id = NULL, gene_id = NULL, gene_id_type = NULL, sampleIndexes = NULL) {
+loadCountsFromH5FileHSDS <- function(es, url, file, sampleIndexes = NULL) {
   if (nrow(es) > 0) {
     return(es)
   }
   src <- httr::parse_url(url)
   dir <- src$query$domain
-  src <- paste0(src$scheme,'://',src$hostname,'/',src$path)
+  src <- paste0(src$scheme, '://', src$hostname, '/', src$path)
   src <- HSDSSource(src)
-  f <- HSDSFile(src, file)
-  if (is.null(sample_id) || is.null(gene_id) || is.null(gene_id_type)) {
-    collection <- gsub('^.*[\\/\\]', '', dirname(file))
-    metafilepath <- paste0(dir,'/', collection, '/', collection, '.h5')
-    metaf <- HSDSFile(src, metafilepath)
-    metads <- HSDSDataset(metaf, '/meta')
-    metatable <- metads[1:metads@shape]
-    if (is.null(sample_id)) {
-      sample_id <- metatable$sample_id[metatable$file_name == substring(file, nchar(dir) + nchar(collection) + 3)]
-    }
-    if (is.null(gene_id)) {
-      gene_id <- metatable$gene_id[metatable$file_name == substring(file, nchar(dir) + nchar(collection) + 3)]
-    }
-    if (is.null(gene_id_type)) {
-      gene_id_type <- metatable$gene_id_type[metatable$file_name == substring(file, nchar(dir) + nchar(collection) + 3)]
-    }
-  }
+  absPath <- file.path(dir, file, fsep="/")
+  f <- HSDSFile(src, absPath)
+  name <- basename(file)
 
-  dg <- HSDSDataset(f, gene_id)
-  genes <- dg[1:dg@shape]
+  metafilepath <- file.path(dirname(absPath), 'meta.h5', fsep="/")
+  metaf <- HSDSFile(src, metafilepath)
+  metads <- HSDSDataset(metaf, '/meta')
+  metatable <- metads[1:metads@shape]
+  h5_meta <- metatable[file_name == name]
+  
   if (is.null(sampleIndexes)) {
-    sampleIndexes <- getSamples(f, sample_id)
+    sampleIndexes <- getSamples(f, h5_meta$sample_id)
     match_accession <- match(es$geo_accession, sampleIndexes)
     phenoData(es) <- phenoData(es[, !is.na(match_accession)])
     sampleIndexes <- match(es$geo_accession, sampleIndexes)
   }
+  
 
-  datasets <- listDatasets(f)
-  if ("/info/version" %in% datasets) {
-    arch_version <- HSDSDataset(f, '/info/version')
-  } else {
-    arch_version <- HSDSDataset(f, '/meta/info/version')
-  }
-  arch_version <- arch_version[1:arch_version@shape[1]]
-  arch_version <- as.integer(arch_version)
-  if (is.na(arch_version)) {
-    arch_version <- 8
-  }
+  gene_id <- strsplit(h5_meta$gene_id, split = ":")[[1]]
+  
+  dg <- HSDSDataset(f, gene_id[[2]])
+  genes <- dg[1:dg@shape]
+  
+  
+      
 
-  ds <- HSDSDataset(f, '/data/expression')
   smap <- data.frame(sampleIndexes, geo_accession=es$geo_accession)
   smap <- smap[order(smap$sampleIndexes),]
   smap <- smap[!is.na(smap$sampleIndexes),]
-  if (arch_version >= 9) {
-    expression <- ds[1:ds@shape[1], smap$sampleIndexes]
+  
+  h5Indexes = list(smap$sampleIndexes,
+                   seq_len(length(genes)))
+  
+  
+  expression <- NULL
+  ds <- HSDSDataset(f, '/data/expression')
+  
+  if (h5_meta$sample_dim == "rows"){
+    expression <- ds[h5Indexes[[2]], h5Indexes[[1]]]
   } else {
-    expression <- ds[smap$sampleIndexes, 1:ds@shape[2]]
+    expression <- ds[h5Indexes[[1]], h5Indexes[[2]]]
     expression <- t(expression)
   }
+  
   rownames(expression) <- genes
   colnames(expression) <- smap$geo_accession
+  
   es <- es[,es$geo_accession %in% colnames(expression)]
-  expression <- expression[,es$geo_accession]
+  expression <- expression[, es$geo_accession]
+  
   es2 <- ExpressionSet(assayData = expression,
                            phenoData = phenoData(es[, !is.na(sampleIndexes)]),
                            annotation = annotation(es),
                            experimentData = experimentData(es))
   experimentData(es2)@preprocessing$gene_counts_source <- file
-  if (!toupper(gene_id_type) == "GENE SYMBOL") {
+  
+  genes_annot <- strsplit(h5_meta$genes_annot, split = ";")[[1]]
+  genes_annot <- unlist( lapply(strsplit(genes_annot, split = ":"), function(annot){
+    setNames(annot[2], annot[1])
+  }))
+  
+  
+  genes_annot_values <- lapply(genes_annot, function(annot){
     tryCatch({
-      gene_symbol <- HSDSDataset(f, "/meta/genes/gene_symbol")
-      gene_symbol <- unlist(gene_symbol[1:gene_symbol@shape])
-      fData(es2) <- cbind(fData(es2), "Gene symbol" = gene_symbol)
+      da <- HSDSDataset(f, annot)
+      as.character(da[seq_len(da@shape)])
     }, error = function(e) {})
-  }
-  if (!toupper(gene_id_type) == "ENSEMBLID") {
-    tryCatch({
-      entrez_id <- HSDSDataset(f, "/meta/genes/ensembl_gene_id")
-      entrez_id <- unlist(entrez_id[1:entrez_id@shape])
-      fData(es2) <- cbind(fData(es2), "ENSEMBLID" = entrez_id)
-    }, error = function(e) {})
-  }
-
+  })
+  genes_annot_values[[gene_id[1]]] <- rownames(es2)
+  genes_annot_values <- genes_annot_values[!unlist(lapply(genes_annot_values, is.null))]
+  fData(es2) <- cbind(fData(es2), genes_annot_values )
+  
   return(es2)
 }
 #' Load count matrix from HDF5-files.
@@ -157,15 +153,6 @@ loadCountsFromHSDS <- function(es, url='https://ctlab.itmo.ru/hsds/?domain=/coun
 
   collection <- sample_amount[,.SD[1]]$type_fac
 
-  metafilepath <- paste0(dir,'/', collection, '/', collection, '.h5')
-  metaf <- HSDSFile(src, metafilepath)
-  metads <- HSDSDataset(metaf, '/meta')
-  metatable <- metads[1:metads@shape]
-  filename <- sub('.*/', '', destfile)
-  sample_id <- metatable[metatable$file_name == filename, ]$sample_id
-  gene_id <- metatable[metatable$file_name == filename, ]$gene_id
-  gene_id_type <- metatable[metatable$file_name == filename, ]$gene_id_type
-
   DT_counts_meta_indexes <- DT_counts_meta_indexes[DT_counts_meta_indexes$file == destfile, ]
 
   sampleIndexes <- match(es$geo_accession, DT_counts_meta_indexes$accession)
@@ -173,8 +160,7 @@ loadCountsFromHSDS <- function(es, url='https://ctlab.itmo.ru/hsds/?domain=/coun
   sampleIndexes <- match(es$geo_accession, DT_counts_meta_indexes$accession)
   sampleIndexes <- DT_counts_meta_indexes[na.omit(sampleIndexes), ]$indexes
 
-  filename <- paste0(dir, '/', destfile)
-  es2 <- loadCountsFromH5FileHSDS(es, url, filename, sample_id, gene_id, gene_id_type, sampleIndexes)
+  es2 <- loadCountsFromH5FileHSDS(es, url, destfile, sampleIndexes)
   return(es2)
 }
 

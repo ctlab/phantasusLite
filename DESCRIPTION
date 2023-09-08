@@ -8,6 +8,7 @@ Authors@R: c(person("Rita", "Sablina", role = "aut"),
 Description: PhantasusLite – a tool designed to integrate the work with RNA-Seq count matrices into a single and fast R-pipeline. This R-package supports loading the data from GEO by GSE. It provides url access to the remote repository with the archs4, archs4_zoo and dee2 HDF5-files for getting the count matrix. Finally phantasusLite allows to get an ExpressionSet with the expression matrix for future differential expression analysis.
 Depends: R (>= 4.2)
 Imports: data.table, rhdf5client(>= 1.21.5), httr, stringr, stats, utils, Biobase
+Suggests: rhdf5
 biocViews: GeneExpression, GUI, Visualization, DataRepresentation, Transcriptomics,
             RNASeq, Microarray, Normalization, Clustering, DifferentialExpression,
             PrincipalComponent, ImmunoOncology

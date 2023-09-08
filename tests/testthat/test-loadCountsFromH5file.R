@@ -9,6 +9,14 @@ test_that("loadCountsFromHSDS works correctly", {
   samples <- es$geo_accession
   es <- loadCountsFromHSDS(es, url)
   expect_true(all(samples %in% es$geo_accession))
+  
+  ess <- getGEO("GSE53053")
+  es <- ess[[1]]
+  es <- loadCountsFromHSDS(es, url)
+  expect_true(nrow(exprs(es)) > 0)
+  samples <- es$geo_accession
+  es <- loadCountsFromHSDS(es, url)
+  expect_true(all(samples %in% es$geo_accession))
 })
 
 
@@ -24,8 +32,14 @@ test_that("loadCountsFromHSDS returns the same ExpressionSet, if it contains cou
 
 test_that("loadCountsFromH5FileHSDS works without metadata params", {
   url <- "https://ctlab.itmo.ru/hsds/?domain=/counts"
-  file <- '/counts/archs4_zoo/Arabidopsis_thaliana_count_matrix.h5'
+  file <- 'archs4/Arabidopsis_thaliana_count_matrix.h5'
   ess <- getGEO("GSE85653")
+  es <- ess[[1]]
+  es <- loadCountsFromH5FileHSDS(es, url, file)
+  expect_true(nrow(exprs(es)) > 0)
+  
+  file <- 'archs4/mouse_gene_v2.2.h5'
+  ess <- getGEO("GSE53053")
   es <- ess[[1]]
   es <- loadCountsFromH5FileHSDS(es, url, file)
   expect_true(nrow(exprs(es)) > 0)
