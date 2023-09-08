@@ -1,19 +1,29 @@
 #' Creates a data table with indexes and chunks of samples in remote HDF5-files
 #'
-#' @param src, contains url of the server
+#' @param url, contains url to the root of counts files
 #' @param collections, contains names of the collections
 #' @return table with samples, indexes and chunks in all HDF5-files
-getIndexRemote <- function(src, collections) {
+getIndexRemote <- function(url, collections) {
+  src <- httr::parse_url(url)
+  dir <- src$query$domain
+  if (is.null(dir)) {
+    dir <- "/"
+  }
+  src <- paste0(src$scheme,'://',src$hostname,'/',src$path)
+  src <- HSDSSource(src)
+  
   DT_h5_meta <- data.table()
+  src <- HSDSSource(url)
   for (collection in collections) {
-    filepath <- paste0('/counts/', collection, '/')
-    src <- HSDSSource(src)
-    metaf <- HSDSFile(src, paste0(filepath, collection, '.h5'))
+    message("Processing collection ", collection)
+    collection_path <- file.path(dir, collection, fsep="/")
+    metaf <- HSDSFile(src, file.path(collection_path, 'meta.h5', fsep="/"))
     metads <- HSDSDataset(metaf, '/meta')
     h5_meta <- metads[1:metads@shape]
     for (input_file in h5_meta$file_name) {
-      full_name <- paste0(filepath, input_file)
-      relative_path <- file.path(collection, input_file)
+      message("Processing file ", input_file)
+      full_name <- file.path(collection_path, input_file, fsep="/")
+      relative_path <- file.path(collection, input_file, fsep="/")
       h5f <- HSDSFile(src, full_name)
       accession <- getSamples(h5f, h5_meta[h5_meta$file_name == input_file, ]$sample_id)
       h5_part <- data.table(accession = accession,
@@ -27,9 +37,9 @@ getIndexRemote <- function(src, collections) {
   return(DT_h5_meta)
 }
 
-createIndexH5REmote <- function(src) {
-  collections <- c('archs4', 'archs4_zoo', 'dee2')
-  DT_h5_meta <- getIndexRemote(src, collections)
+createIndexH5Remote <- function(url) {
+  collections <- c('archs4', 'dee2')
+  DT_h5_meta <- getIndexRemote(url, collections)
   DT_h5_meta_split <- split(DT_h5_meta, DT_h5_meta$chunk)
   createIndexH5(DT_h5_meta_split, 'index.h5')
 }

@@ -1,13 +1,17 @@
+#' @import rhdf5
 createH5 <- function(data, file, dataset_name) {
   stopifnot(requireNamespace("rhdf5"))
   if (file.exists(file)) {
-    unlink(file, recursive = FALSE)
+    stop(sprintf("File %s already exist", file))
+    # unlink(file, recursive = FALSE)
   }
   h5createFile(file)
   h5write(data, file, dataset_name)
   H5close()
 }
 
+#' Converts collection meta.txt files to meta.h5, putting them to the respective 
+#' collection folders
 createMetaH5 <- function(counts_dir){
   stopifnot(requireNamespace("rhdf5"))
   collections <- list.dirs(counts_dir, full.names = FALSE)
@@ -15,9 +19,9 @@ createMetaH5 <- function(counts_dir){
   for (collection in collections) {
     destdir <- paste0(counts_dir, '/', collection)
     meta <- data.table()
-    filename <- paste0("meta", collection, ".txt")
+    filename <- paste0("meta.txt")
     h5_meta <- fread(file.path(destdir, filename), index = "file_name")
-    h5filename <- paste0(collection, '.h5')
+    h5filename <- file.path(destdir, 'meta.h5')
     createH5(h5_meta, h5filename, 'meta')
   }
 }

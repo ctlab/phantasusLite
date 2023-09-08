@@ -4,10 +4,10 @@
 \alias{getIndexRemote}
 \title{Creates a data table with indexes and chunks of samples in remote HDF5-files}
 \usage{
-getIndexRemote(src, collections)
+getIndexRemote(url, collections)
 }
 \arguments{
-\item{src, }{contains url of the server}
+\item{url, }{contains url of the server}
 
 \item{collections, }{contains names of the collections}
 }
