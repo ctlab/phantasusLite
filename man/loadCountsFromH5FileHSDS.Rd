@@ -4,28 +4,14 @@
 \alias{loadCountsFromH5FileHSDS}
 \title{Load count matrix from remote HDF5-file}
 \usage{
-loadCountsFromH5FileHSDS(
-  es,
-  url,
-  file,
-  sample_id = NULL,
-  gene_id = NULL,
-  gene_id_type = NULL,
-  sampleIndexes = NULL
-)
+loadCountsFromH5FileHSDS(es, url, file, sampleIndexes = NULL)
 }
 \arguments{
 \item{es, }{containing ExpressionSet loaded from GEO. Contains empty expression matrix.}
 
 \item{url, }{containing url of the server and root domain.}
 
-\item{file, }{containing name of the file}
-
-\item{sample_id, }{containing path to the dataset with sample ids}
-
-\item{gene_id, }{containing path to the dataset with gene ids}
-
-\item{gene_id_type, }{containing path to the dataset with gene id type}
+\item{file, }{containing name of the file (relative to the root domain)}
 
 \item{sampleIndexes, }{containing sample indexes list}
 }
