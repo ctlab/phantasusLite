@@ -20,7 +20,7 @@ To install the package you should:
 ```{r message=FALSE, eval=FALSE}
 library(devtools)
 install_github("assaron/rhdf5client")
-install_github("rsablina/phantasusLite")
+install_github("ctlab/phantasusLite")
 ```
 
 ## Dependencies
@@ -50,7 +50,7 @@ es <- ess[[1]]
 ```
 
 
-ExpressionSet from the GEO doesn't contain the expression matrix -- exprs(es) is empty.
+ExpressionSet from the GEO doesn't contain the expression matrix -- `exprs(es)` is empty.
 
 ```{r}
 head(exprs(es))
@@ -64,4 +64,10 @@ The remote repository URL is '<https://ctlab.itmo.ru/hsds/?domain=/counts>'.
 url <- 'https://ctlab.itmo.ru/hsds/?domain=/counts'
 es <- loadCountsFromHSDS(es, url)
 head(exprs(es))
+```
+
+
+The available gene annotations are also filled in:
+```{r}
+head(fData(es))
 ```

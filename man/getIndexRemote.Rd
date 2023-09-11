@@ -7,7 +7,7 @@
 getIndexRemote(url, collections)
 }
 \arguments{
-\item{url, }{contains url of the server}
+\item{url, }{contains url to the root of counts files}
 
 \item{collections, }{contains names of the collections}
 }
