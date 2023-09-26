@@ -9,6 +9,13 @@ inferCondition(es)
 \arguments{
 \item{es, }{contains ExpressionSet object}
 }
+\value{
+Annotated ExpressionSet with conditions and replicates
+}
 \description{
 Adds condition to the annotation.
+}
+\examples{
+es <- inferCondition(es)
+
 }

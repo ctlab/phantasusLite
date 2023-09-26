@@ -9,6 +9,9 @@ inferConditionImpl(gse_titles)
 \arguments{
 \item{gse_titles, }{contains titles}
 }
+\value{
+List of conditions and replicates
+}
 \description{
 Create condition from the samples title
 }

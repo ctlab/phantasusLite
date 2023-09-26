@@ -20,3 +20,8 @@ List of all HDF5-files on the server or all files of the collection
 \description{
 Returns list of all HDF5-files on HSDS-server
 }
+\examples{
+url <- 'https://ctlab.itmo.ru/hsds/?domain=/counts'
+loadCountsFromHSDS(url)
+
+}

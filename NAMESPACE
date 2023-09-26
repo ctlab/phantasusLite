@@ -2,7 +2,6 @@
 
 export(getHSDSFileList)
 export(inferCondition)
-export(inferConditionImpl)
 export(loadCountsFromH5FileHSDS)
 export(loadCountsFromHSDS)
 export(read.gct)

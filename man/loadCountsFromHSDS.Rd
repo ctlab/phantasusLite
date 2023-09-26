@@ -11,6 +11,15 @@ loadCountsFromHSDS(es, url = "https://ctlab.itmo.ru/hsds/?domain=/counts")
 
 \item{url, }{containing url of the server and root domain.}
 }
+\value{
+ExpressionSet with loaded count matrix
+}
 \description{
 Load count matrix from HDF5-files.
+}
+\examples{
+ess <- getGEO("GSE85653")
+es <- ess[[1]]
+es <- loadCountsFromHSDS(es, url)
+
 }

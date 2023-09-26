@@ -6,6 +6,11 @@
 #'
 #' @export
 #' @import rhdf5client
+#' @examples
+#' url <- 'https://ctlab.itmo.ru/hsds/?domain=/counts'
+#' loadCountsFromHSDS(url)
+#'
+
 getHSDSFileList <- function(url='https://ctlab.itmo.ru/hsds/?domain=/counts', directory = NULL) {
     src <- httr::parse_url(url)
     dir <- src$query$domain
