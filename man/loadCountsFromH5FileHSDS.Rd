@@ -21,3 +21,7 @@ ExpressionSet object with loaded count matrix
 \description{
 Load count matrix from remote HDF5-file
 }
+\examples{
+file <- "/counts/dee2/athaliana_star_matrix_20221107.h5"
+es <- loadCountsFromH5FileHSDS(es, url, file)
+}

@@ -32,6 +32,10 @@ getSamples <- function(h5f, samples_id) {
 #' @export
 #' @import data.table
 #' @import rhdf5client
+#'
+#' @examples
+#' file <- "/counts/dee2/athaliana_star_matrix_20221107.h5"
+#' es <- loadCountsFromH5FileHSDS(es, url, file)
 loadCountsFromH5FileHSDS <- function(es, url, file, sampleIndexes = NULL) {
   if (nrow(es) > 0) {
     return(es)
@@ -49,59 +53,59 @@ loadCountsFromH5FileHSDS <- function(es, url, file, sampleIndexes = NULL) {
   metads <- HSDSDataset(metaf, '/meta')
   metatable <- metads[1:metads@shape]
   h5_meta <- metatable[file_name == name]
-  
+
   if (is.null(sampleIndexes)) {
     sampleIndexes <- getSamples(f, h5_meta$sample_id)
     match_accession <- match(es$geo_accession, sampleIndexes)
     phenoData(es) <- phenoData(es[, !is.na(match_accession)])
     sampleIndexes <- match(es$geo_accession, sampleIndexes)
   }
-  
+
 
   gene_id <- strsplit(h5_meta$gene_id, split = ":")[[1]]
-  
+
   dg <- HSDSDataset(f, gene_id[[2]])
   genes <- dg[1:dg@shape]
-  
-  
-      
+
+
+
 
   smap <- data.frame(sampleIndexes, geo_accession=es$geo_accession)
   smap <- smap[order(smap$sampleIndexes),]
   smap <- smap[!is.na(smap$sampleIndexes),]
-  
+
   h5Indexes = list(smap$sampleIndexes,
                    seq_len(length(genes)))
-  
-  
+
+
   expression <- NULL
   ds <- HSDSDataset(f, '/data/expression')
-  
+
   if (h5_meta$sample_dim == "rows"){
     expression <- ds[h5Indexes[[2]], h5Indexes[[1]]]
   } else {
     expression <- ds[h5Indexes[[1]], h5Indexes[[2]]]
     expression <- t(expression)
   }
-  
+
   rownames(expression) <- genes
   colnames(expression) <- smap$geo_accession
-  
+
   es <- es[,es$geo_accession %in% colnames(expression)]
   expression <- expression[, es$geo_accession]
-  
+
   es2 <- ExpressionSet(assayData = expression,
                            phenoData = phenoData(es[, !is.na(sampleIndexes)]),
                            annotation = annotation(es),
                            experimentData = experimentData(es))
   experimentData(es2)@preprocessing$gene_counts_source <- file
-  
+
   genes_annot <- strsplit(h5_meta$genes_annot, split = ";")[[1]]
   genes_annot <- unlist( lapply(strsplit(genes_annot, split = ":"), function(annot){
     setNames(annot[2], annot[1])
   }))
-  
-  
+
+
   genes_annot_values <- lapply(genes_annot, function(annot){
     tryCatch({
       da <- HSDSDataset(f, annot)
@@ -111,15 +115,20 @@ loadCountsFromH5FileHSDS <- function(es, url, file, sampleIndexes = NULL) {
   genes_annot_values[[gene_id[1]]] <- rownames(es2)
   genes_annot_values <- genes_annot_values[!unlist(lapply(genes_annot_values, is.null))]
   fData(es2) <- cbind(fData(es2), genes_annot_values )
-  
+
   return(es2)
 }
 #' Load count matrix from HDF5-files.
 #' @param es, containing ExpressionSet loaded from GEO. Contains empty expression matrix.
 #'
 #' @param url, containing url of the server and root domain.
-#'
+#' @return ExpressionSet with loaded count matrix
 #' @export
+#' @examples
+#' ess <- getGEO("GSE85653")
+#' es <- ess[[1]]
+#' es <- loadCountsFromHSDS(es, url)
+#'
 loadCountsFromHSDS <- function(es, url='https://ctlab.itmo.ru/hsds/?domain=/counts') {
   if (nrow(es) > 0) {
     return(es)

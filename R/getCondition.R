@@ -11,8 +11,7 @@ removeRepeatWords <- function(titles) {
 
 #' Create condition from the samples title
 #' @param gse_titles, contains titles
-#'
-#' @export
+#' @return List of conditions and replicates
 inferConditionImpl <- function(gse_titles) {
   inferCondition <- gse_titles
   rep_num <- NULL
@@ -73,6 +72,11 @@ inferConditionImpl <- function(gse_titles) {
 #' @param es, contains ExpressionSet object
 #'
 #' @export
+#' @return Annotated ExpressionSet with conditions and replicates
+#' @examples
+#' es <- inferCondition(es)
+#'
+
 inferCondition <- function(es) {
   newAnnot <- inferConditionImpl(es$title)
   if (length(newAnnot) == 2) {
