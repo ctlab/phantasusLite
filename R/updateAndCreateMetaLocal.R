@@ -1,4 +1,8 @@
+#' Creates metafiles
 #' @import rhdf5
+#' @param data, file name, dataset name
+#' @return NULL
+#'
 createH5 <- function(data, file, dataset_name) {
   stopifnot(requireNamespace("rhdf5"))
   if (file.exists(file)) {
@@ -8,10 +12,13 @@ createH5 <- function(data, file, dataset_name) {
   h5createFile(file)
   h5write(data, file, dataset_name)
   H5close()
+  return(invisible(NULL))
 }
 
-#' Converts collection meta.txt files to meta.h5, putting them to the respective 
+#' Converts collection meta.txt files to meta.h5, putting them to the respective
 #' collection folders
+#' @param directory name
+#' @return NULL
 createMetaH5 <- function(counts_dir){
   stopifnot(requireNamespace("rhdf5"))
   collections <- list.dirs(counts_dir, full.names = FALSE)
@@ -23,10 +30,13 @@ createMetaH5 <- function(counts_dir){
     h5_meta <- fread(file.path(destdir, filename), index = "file_name")
     h5filename <- file.path(destdir, 'meta.h5')
     createH5(h5_meta, h5filename, 'meta')
+    return(invisible(NULL))
   }
 }
 
-
+#' Creates HDF5-File with priority
+#' @param directory name
+#' @return NULL
 createPriorityH5 <- function(counts_dir, force = FALSE, verbose = FALSE){
   stopifnot(requireNamespace("rhdf5"))
   if (!dir.exists(counts_dir)) {
@@ -51,10 +61,12 @@ createPriorityH5 <- function(counts_dir, force = FALSE, verbose = FALSE){
     write.table(x = priority, file = priority_file, sep = "\t", eol = "\n", row.names = FALSE, col.names = TRUE, quote = FALSE)
   }
   createH5(priority, 'priority.h5', 'priority')
-
+  return(invisible(NULL))
 }
 
-
+#' Updates indexes from HDF5-files
+#' @param directory name
+#' @return NULL
 updateIndexH5 <- function(counts_dir, force = FALSE, verbose = FALSE){
   stopifnot(requireNamespace("rhdf5"))
   if (!dir.exists(counts_dir)) {
@@ -115,10 +127,13 @@ updateIndexH5 <- function(counts_dir, force = FALSE, verbose = FALSE){
   createIndexH5(DT_counts_meta_split, 'index.h5')
   save(DT_counts_meta, file = meta_name, eval.promises = TRUE)
   rm(DT_counts_meta)
+  return(invisible(NULL))
 }
 
 
-
+#' Gets list  with metadata
+#' @param directory name, collection name
+#' @return list with metadata
 getCountsMetaPart <- function(counts_dir, collection_name, verbose){
   destdir <- file.path(counts_dir, collection_name)
   if (!dir.exists(destdir)) {
@@ -151,6 +166,10 @@ getCountsMetaPart <- function(counts_dir, collection_name, verbose){
   return(DT_h5_meta)
 }
 
+#' Creates HDF5-metafiles
+#' @param data, file name
+#' @return NULL
+#'
 createIndexH5 <- function(data, file) {
   stopifnot(requireNamespace("rhdf5"))
   h5createFile(file)
@@ -159,8 +178,13 @@ createIndexH5 <- function(data, file) {
     h5write(data[[i]], file, paste0("/",names[i]))
   }
   h5closeAll()
+  return(invisible(NULL))
 }
 
+#' Updates metadata for dee2
+#' @param directory name
+#' @return NULL
+#'
 updateDEE2meta <- function(destDir = file.path(getOption("phantasusCacheDir"), "counts/dee2")){
   dee2files <- list.files(destDir, pattern = '\\.h5$')
   DT_meta <- data.frame(matrix(ncol = 4, nrow = length(dee2files), dimnames = list(NULL, c("file_name", "sample_id", "gene_id", "gene_id_type"))))
@@ -193,7 +217,10 @@ updateDEE2meta <- function(destDir = file.path(getOption("phantasusCacheDir"), "
   write.table(x = DT_meta, file = file.path(destDir, "meta.txt"), sep = "\t", col.names = TRUE, row.names = FALSE, quote = FALSE)
 }
 
-
+#' Updates metadata for archs4
+#' @param directory name
+#' @return NULL
+#'
 updateARCHS4meta <- function(archDir = file.path(getOption("phantasusCacheDir"), "counts/archs4")){
   stopifnot(requireNamespace("rhdf5"))
   archs4files <- list.files(archDir, pattern = '\\.h5$')
@@ -241,9 +268,13 @@ updateARCHS4meta <- function(archDir = file.path(getOption("phantasusCacheDir"),
     }
     H5Fclose(h5f)
   }
-
+  return(invisible(NULL))
 }
 
+#' Validates counts collection
+#' @param directory name
+#' @return false if collection is not valid
+#'
 validateCountsCollection <- function(collectionDir, verbose=FALSE){
   stopifnot(requireNamespace("rhdf5"))
   if (!file.exists(file.path(collectionDir, "meta.txt"))) {
