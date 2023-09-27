@@ -3,7 +3,6 @@ title: "Using phantasusLite package"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Using phantasusLite package}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
