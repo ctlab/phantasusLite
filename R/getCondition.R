@@ -1,3 +1,6 @@
+#' Removes repeated words from conditions
+#' @param titles, contains titles
+#' @return titles without repeated words
 removeRepeatWords <- function(titles) {
   titles_without_repeat_words <- titles
   repeat_words <- regmatches(titles, regexpr("(?![-+}\\]\\)])(\\W|_)*\\w*$", titles, ignore.case = TRUE, perl = TRUE))
@@ -9,7 +12,7 @@ removeRepeatWords <- function(titles) {
   return(titles_without_repeat_words)
 }
 
-#' Create condition from the samples title
+#' Creates condition from the samples titles
 #' @param gse_titles, contains titles
 #' @return List of conditions and replicates
 inferConditionImpl <- function(gse_titles) {
@@ -74,9 +77,10 @@ inferConditionImpl <- function(gse_titles) {
 #' @export
 #' @return Annotated ExpressionSet with conditions and replicates
 #' @examples
+#' ess <- GEOquery::getGEO("GSE143903")
+#' es <- ess[[1]]
 #' es <- inferCondition(es)
 #'
-
 inferCondition <- function(es) {
   newAnnot <- inferConditionImpl(es$title)
   if (length(newAnnot) == 2) {

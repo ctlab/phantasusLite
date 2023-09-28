@@ -1,5 +1,4 @@
 #' Creates a data table with indexes and chunks of samples in remote HDF5-files
-#'
 #' @param url, contains url to the root of counts files
 #' @param collections, contains names of the collections
 #' @return table with samples, indexes and chunks in all HDF5-files
@@ -11,7 +10,7 @@ getIndexRemote <- function(url, collections) {
   }
   src <- paste0(src$scheme,'://',src$hostname,'/',src$path)
   src <- HSDSSource(src)
-  
+
   DT_h5_meta <- data.table()
   src <- HSDSSource(url)
   for (collection in collections) {
@@ -37,9 +36,13 @@ getIndexRemote <- function(url, collections) {
   return(DT_h5_meta)
 }
 
+#' Creates HDF5-file with indexes
+#' @param url, contains url to the root of counts files
+#' @return Returns NULL
 createIndexH5Remote <- function(url) {
   collections <- c('archs4', 'dee2')
   DT_h5_meta <- getIndexRemote(url, collections)
   DT_h5_meta_split <- split(DT_h5_meta, DT_h5_meta$chunk)
   createIndexH5(DT_h5_meta_split, 'index.h5')
+  return(invisible(NULL))
 }

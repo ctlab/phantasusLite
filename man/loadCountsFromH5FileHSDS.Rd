@@ -4,7 +4,12 @@
 \alias{loadCountsFromH5FileHSDS}
 \title{Load count matrix from remote HDF5-file}
 \usage{
-loadCountsFromH5FileHSDS(es, url, file, sampleIndexes = NULL)
+loadCountsFromH5FileHSDS(
+  es,
+  url = "https://ctlab.itmo.ru/hsds/?domain=/counts",
+  file,
+  sampleIndexes = NULL
+)
 }
 \arguments{
 \item{es, }{containing ExpressionSet loaded from GEO. Contains empty expression matrix.}
@@ -22,6 +27,9 @@ ExpressionSet object with loaded count matrix
 Load count matrix from remote HDF5-file
 }
 \examples{
-file <- "/counts/dee2/athaliana_star_matrix_20221107.h5"
+ess <- GEOquery::getGEO("GSE85653")
+es <- ess[[1]]
+url <- 'https://ctlab.itmo.ru/hsds/?domain=/counts'
+file <- "/dee2/athaliana_star_matrix_20221107.h5"
 es <- loadCountsFromH5FileHSDS(es, url, file)
 }

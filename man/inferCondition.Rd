@@ -16,6 +16,8 @@ Annotated ExpressionSet with conditions and replicates
 Adds condition to the annotation.
 }
 \examples{
+ess <- GEOquery::getGEO("GSE143903")
+es <- ess[[1]]
 es <- inferCondition(es)
 
 }
