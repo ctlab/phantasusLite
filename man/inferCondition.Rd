@@ -19,5 +19,7 @@ Adds condition to the annotation.
 ess <- GEOquery::getGEO("GSE143903")
 es <- ess[[1]]
 es <- inferCondition(es)
+es$condition # contains inferred groups
+es$replicate # contains inferred replicate numbers
 
 }

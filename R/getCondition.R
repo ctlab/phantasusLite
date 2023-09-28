@@ -80,6 +80,8 @@ inferConditionImpl <- function(gse_titles) {
 #' ess <- GEOquery::getGEO("GSE143903")
 #' es <- ess[[1]]
 #' es <- inferCondition(es)
+#' es$condition # contains inferred groups
+#' es$replicate # contains inferred replicate numbers
 #'
 inferCondition <- function(es) {
   newAnnot <- inferConditionImpl(es$title)
