@@ -5,17 +5,29 @@ Version: 0.1.0
 Authors@R: c(person("Rita", "Sablina", role = "aut"),        
              person("Maxim", "Kleverov", role = "aut"),        
              person("Alexey", "Sergushichev", email = "alsergbox@gmail.com", role = c("aut", "cre")))
-Description: PhantasusLite – a tool designed to integrate the work with RNA-Seq count matrices into a single and fast R-pipeline. This R-package supports loading the data from GEO by GSE. It provides url access to the remote repository with the archs4, archs4_zoo and dee2 HDF5-files for getting the count matrix. Finally phantasusLite allows to get an ExpressionSet with the expression matrix for future differential expression analysis.
+Description: PhantasusLite – a lightweight package with helper functions of general interest 
+    extracted from phantasus package. In parituclar it simplifies working with public
+    RNA-seq datasets from GEO by providing access to the remote
+    HSDS repository with the precomputed gene counts from ARCHS4 and DEE2 projects.
 Depends: R (>= 4.2)
-Imports: data.table, rhdf5client(>= 1.21.5), httr, stringr, stats, utils, Biobase, rhdf5
-biocViews: GeneExpression, GUI, Visualization, DataRepresentation, Transcriptomics,
-            RNASeq, Microarray, Normalization, Clustering, DifferentialExpression,
-            PrincipalComponent, ImmunoOncology
+Imports: 
+    data.table, 
+    rhdf5client(>= 1.21.5), 
+    httr, stringr,
+    stats, 
+    utils, 
+    Biobase, 
+    rhdf5,
+    methods
+biocViews: GeneExpression, Transcriptomics, RNASeq
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
 Suggests: 
-    testthat (>= 3.0.0), knitr, rmarkdown, GEOquery, rhdf5 
+    testthat (>= 3.0.0), 
+    knitr, 
+    rmarkdown, 
+    GEOquery
 VignetteBuilder: knitr
 Config/testthat/edition: 3
