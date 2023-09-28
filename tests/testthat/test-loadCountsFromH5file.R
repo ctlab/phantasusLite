@@ -9,14 +9,16 @@ test_that("loadCountsFromHSDS works correctly", {
   samples <- es$geo_accession
   es <- loadCountsFromHSDS(es, url)
   expect_true(all(samples %in% es$geo_accession))
-  
-  ess <- getGEO("GSE53053")
-  es <- ess[[1]]
-  es <- loadCountsFromHSDS(es, url)
-  expect_true(nrow(exprs(es)) > 0)
-  samples <- es$geo_accession
-  es <- loadCountsFromHSDS(es, url)
-  expect_true(all(samples %in% es$geo_accession))
+
+  if (utils::packageVersion("rhdf5client") >= "1.23.5") {
+      ess <- getGEO("GSE53053")
+      es <- ess[[1]]
+      es <- loadCountsFromHSDS(es, url)
+      expect_true(nrow(exprs(es)) > 0)
+      samples <- es$geo_accession
+      es <- loadCountsFromHSDS(es, url)
+      expect_true(all(samples %in% es$geo_accession))
+  }
 })
 
 
@@ -37,10 +39,12 @@ test_that("loadCountsFromH5FileHSDS works without metadata params", {
   es <- ess[[1]]
   es <- loadCountsFromH5FileHSDS(es, url, file)
   expect_true(nrow(exprs(es)) > 0)
-  
-  file <- 'archs4/mouse_gene_v2.2.h5'
-  ess <- getGEO("GSE53053")
-  es <- ess[[1]]
-  es <- loadCountsFromH5FileHSDS(es, url, file)
-  expect_true(nrow(exprs(es)) > 0)
+
+  if (utils::packageVersion("rhdf5client") >= "1.23.5") {
+      file <- 'archs4/mouse_gene_v2.2.h5'
+      ess <- getGEO("GSE53053")
+      es <- ess[[1]]
+      es <- loadCountsFromH5FileHSDS(es, url, file)
+      expect_true(nrow(exprs(es)) > 0)
+  }
 })
