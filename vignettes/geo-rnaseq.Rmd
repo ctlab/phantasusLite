@@ -1,0 +1,67 @@
+---
+title: "Working with public RNA-seq datasets from GEO"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Working with public RNA-seq datasets from GEO}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+`phantasusLite` simplifies working with public
+RNA-seq datasets from Gene Expression Omnibus (GEO) database by providing access to the remote
+HSDS repository with the precomputed gene counts from ARCHS4 and DEE2 projects.
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r message=FALSE, warning=FALSE}
+library(GEOquery)
+library(phantasusLite)
+```
+
+Let's load dataset GSE85653 from GEO using `GEOquery` package:
+
+```{r message=FALSE}
+ess <- getGEO("GSE85653")
+es <- ess[[1]]
+```
+
+RNA-seq dataset from GEO do not contain the expression matrix, thus `exprs(es)` is empty:
+
+```{r}
+head(exprs(es))
+```
+
+However, a number of precomputed gene count tables are available at HSDS server  '<https://ctlab.itmo.ru/hsds/>'. It features HDF5 files with counts
+from ARCHS4 and DEE2 projects:
+
+```{r}
+url <- 'https://ctlab.itmo.ru/hsds/?domain=/counts'
+getHSDSFileList(url)
+```
+
+GSE85653 dataset was sequenced from Arabidopsis thaliana and we can get an expression matrix 
+from the corresponding HDF5-file with DEE2 data:
+
+```{r}
+file <- "dee2/athaliana_star_matrix_20221107.h5"
+es <- loadCountsFromH5FileHSDS(es, url, file)
+head(exprs(es))
+```
+
+Normally `loadCountsFromHSDS` can be used to automatically select the HDF5-file with the largest
+number of quantified samples:
+
+```{r}
+es <- ess[[1]]
+es <- loadCountsFromHSDS(es, url)
+head(exprs(es))
+```
+
+The counts are a bit different from the previous values as ARCHS4 counts were used -- ARCHS4 is prioritized when there are several files with the same number of samples:
+
+```{r}
+es@experimentData@preprocessing$gene_counts_source
+```
