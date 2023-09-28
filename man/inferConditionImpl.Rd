@@ -2,7 +2,7 @@
 % Please edit documentation in R/getCondition.R
 \name{inferConditionImpl}
 \alias{inferConditionImpl}
-\title{Create condition from the samples title}
+\title{Creates condition from the samples titles}
 \usage{
 inferConditionImpl(gse_titles)
 }
@@ -13,5 +13,5 @@ inferConditionImpl(gse_titles)
 List of conditions and replicates
 }
 \description{
-Create condition from the samples title
+Creates condition from the samples titles
 }

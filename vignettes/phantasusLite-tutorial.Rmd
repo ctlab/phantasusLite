@@ -3,6 +3,7 @@ title: "Using phantasusLite package"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Using phantasusLite package}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
@@ -62,7 +63,7 @@ getHSDSFileList(url, directory)
 One can get an expression matrix from the specific HDF5-file:
 
 ```{r}
-file <- "/counts/dee2/athaliana_star_matrix_20221107.h5"
+file <- "/dee2/athaliana_star_matrix_20221107.h5"
 es <- loadCountsFromH5FileHSDS(es, url, file)
 ```
 

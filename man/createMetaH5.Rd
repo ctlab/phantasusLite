@@ -8,7 +8,10 @@ collection folders}
 createMetaH5(counts_dir)
 }
 \arguments{
-\item{directory}{name}
+\item{counts_dir, }{contains directory name}
+}
+\value{
+Returns NULL
 }
 \description{
 Converts collection meta.txt files to meta.h5, putting them to the respective

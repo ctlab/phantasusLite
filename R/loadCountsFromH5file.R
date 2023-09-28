@@ -34,9 +34,12 @@ getSamples <- function(h5f, samples_id) {
 #' @import rhdf5client
 #'
 #' @examples
-#' file <- "/counts/dee2/athaliana_star_matrix_20221107.h5"
+#' ess <- GEOquery::getGEO("GSE85653")
+#' es <- ess[[1]]
+#' url <- 'https://ctlab.itmo.ru/hsds/?domain=/counts'
+#' file <- "/dee2/athaliana_star_matrix_20221107.h5"
 #' es <- loadCountsFromH5FileHSDS(es, url, file)
-loadCountsFromH5FileHSDS <- function(es, url, file, sampleIndexes = NULL) {
+loadCountsFromH5FileHSDS <- function(es, url='https://ctlab.itmo.ru/hsds/?domain=/counts', file, sampleIndexes = NULL) {
   if (nrow(es) > 0) {
     return(es)
   }
@@ -125,8 +128,9 @@ loadCountsFromH5FileHSDS <- function(es, url, file, sampleIndexes = NULL) {
 #' @return ExpressionSet with loaded count matrix
 #' @export
 #' @examples
-#' ess <- getGEO("GSE85653")
+#' ess <- GEOquery::getGEO("GSE85653")
 #' es <- ess[[1]]
+#' url <- 'https://ctlab.itmo.ru/hsds/?domain=/counts'
 #' es <- loadCountsFromHSDS(es, url)
 #'
 loadCountsFromHSDS <- function(es, url='https://ctlab.itmo.ru/hsds/?domain=/counts') {

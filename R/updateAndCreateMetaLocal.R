@@ -1,8 +1,9 @@
-#' Creates metafiles
-#' @import rhdf5
-#' @param data, file name, dataset name
+#' Creates metafiles for HDF5-files
+#' @param data, contains metadata
+#' @param file, contains file name
+#' @param dataset_name, contains dataset name
 #' @return NULL
-#'
+#' @import rhdf5
 createH5 <- function(data, file, dataset_name) {
   stopifnot(requireNamespace("rhdf5"))
   if (file.exists(file)) {
@@ -17,8 +18,8 @@ createH5 <- function(data, file, dataset_name) {
 
 #' Converts collection meta.txt files to meta.h5, putting them to the respective
 #' collection folders
-#' @param directory name
-#' @return NULL
+#' @param counts_dir, contains directory name
+#' @return Returns NULL
 createMetaH5 <- function(counts_dir){
   stopifnot(requireNamespace("rhdf5"))
   collections <- list.dirs(counts_dir, full.names = FALSE)
@@ -35,8 +36,10 @@ createMetaH5 <- function(counts_dir){
 }
 
 #' Creates HDF5-File with priority
-#' @param directory name
-#' @return NULL
+#' @param counts_dir, contains counts directory
+#' @param force logical value which lets function replace existing priority file
+#' @param verbose logical value which determines a content of  the output.
+#' @return Returns NULL
 createPriorityH5 <- function(counts_dir, force = FALSE, verbose = FALSE){
   stopifnot(requireNamespace("rhdf5"))
   if (!dir.exists(counts_dir)) {
@@ -65,8 +68,10 @@ createPriorityH5 <- function(counts_dir, force = FALSE, verbose = FALSE){
 }
 
 #' Updates indexes from HDF5-files
-#' @param directory name
-#' @return NULL
+#' @param counts_dir, contains counts directory
+#' @param force logical value which lets function replace existing index file
+#' @param verbose logical value which determines a content of  the output.
+#' @return Returns NULL
 updateIndexH5 <- function(counts_dir, force = FALSE, verbose = FALSE){
   stopifnot(requireNamespace("rhdf5"))
   if (!dir.exists(counts_dir)) {
@@ -132,7 +137,9 @@ updateIndexH5 <- function(counts_dir, force = FALSE, verbose = FALSE){
 
 
 #' Gets list  with metadata
-#' @param directory name, collection name
+#' @param counts_dir, contains counts directory
+#' @param collection_name contains name of the collection
+#' @param verbose logical value which determines a content of  the output.
 #' @return list with metadata
 getCountsMetaPart <- function(counts_dir, collection_name, verbose){
   destdir <- file.path(counts_dir, collection_name)
@@ -166,10 +173,10 @@ getCountsMetaPart <- function(counts_dir, collection_name, verbose){
   return(DT_h5_meta)
 }
 
-#' Creates HDF5-metafiles
-#' @param data, file name
-#' @return NULL
-#'
+#' Writes indexes to the file
+#' @param data, contains metadata
+#' @param file contains the file name
+#' @return Returns NULL
 createIndexH5 <- function(data, file) {
   stopifnot(requireNamespace("rhdf5"))
   h5createFile(file)
@@ -181,10 +188,10 @@ createIndexH5 <- function(data, file) {
   return(invisible(NULL))
 }
 
-#' Updates metadata for dee2
-#' @param directory name
-#' @return NULL
-#'
+#' Creates \code{meta.txt} file, which describes typical dee2 files.
+#' @param destDir path to directory with DEE2 .h5 files.
+#' @import data.table
+#' @return Returns NULL
 updateDEE2meta <- function(destDir = file.path(getOption("phantasusCacheDir"), "counts/dee2")){
   dee2files <- list.files(destDir, pattern = '\\.h5$')
   DT_meta <- data.frame(matrix(ncol = 4, nrow = length(dee2files), dimnames = list(NULL, c("file_name", "sample_id", "gene_id", "gene_id_type"))))
@@ -215,12 +222,13 @@ updateDEE2meta <- function(destDir = file.path(getOption("phantasusCacheDir"), "
     }
   }
   write.table(x = DT_meta, file = file.path(destDir, "meta.txt"), sep = "\t", col.names = TRUE, row.names = FALSE, quote = FALSE)
+  return(invisible(NULL))
 }
 
-#' Updates metadata for archs4
-#' @param directory name
-#' @return NULL
-#'
+#' Creates \code{meta.txt} file, which describes typical archs4 and archs4Zoo files.
+#' @param archDir path to directory with arch4 .h5 files.
+#' @import data.table
+#' @return Returns NULL
 updateARCHS4meta <- function(archDir = file.path(getOption("phantasusCacheDir"), "counts/archs4")){
   stopifnot(requireNamespace("rhdf5"))
   archs4files <- list.files(archDir, pattern = '\\.h5$')
@@ -272,7 +280,8 @@ updateARCHS4meta <- function(archDir = file.path(getOption("phantasusCacheDir"),
 }
 
 #' Validates counts collection
-#' @param directory name
+#' @param collectionDir contains directory name
+#' @param verbose logical value which determines a content of  the output.
 #' @return false if collection is not valid
 #'
 validateCountsCollection <- function(collectionDir, verbose=FALSE){
