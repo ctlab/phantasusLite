@@ -4,10 +4,18 @@
 \alias{createIndexH5Remote}
 \title{Creates HDF5-file with indexes}
 \usage{
-createIndexH5Remote(url)
+createIndexH5Remote(
+  url,
+  collections = c("archs4", "dee2"),
+  destfile = "index.h5"
+)
 }
 \arguments{
-\item{url, }{contains url to the root of counts files}
+\item{url, }{contains URL to the root of counts files}
+
+\item{collections}{vector of collection names to process}
+
+\item{destfile}{where to put resulting index file}
 }
 \value{
 Returns NULL
