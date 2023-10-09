@@ -13,6 +13,9 @@ createH5(data, file, dataset_name)
 
 \item{dataset_name, }{contains dataset name}
 }
+\value{
+Returns NULL
+}
 \description{
 Creates metafiles for HDF5-files
 }

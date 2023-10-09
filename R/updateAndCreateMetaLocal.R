@@ -2,7 +2,7 @@
 #' @param data, contains metadata
 #' @param file, contains file name
 #' @param dataset_name, contains dataset name
-#' @return NULL
+#' @return Returns NULL
 #' @import rhdf5
 createH5 <- function(data, file, dataset_name) {
   stopifnot(requireNamespace("rhdf5"))
