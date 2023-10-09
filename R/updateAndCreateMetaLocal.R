@@ -30,9 +30,13 @@ createMetaH5 <- function(counts_dir){
     filename <- paste0("meta.txt")
     h5_meta <- fread(file.path(destdir, filename), index = "file_name")
     h5filename <- file.path(destdir, 'meta.h5')
+    if (file.exists(h5filename)) {
+      message("Skipping ", h5filename, " as it's already exists")
+      next
+    }
     createH5(h5_meta, h5filename, 'meta')
-    return(invisible(NULL))
   }
+  return(invisible(NULL))
 }
 
 #' Creates HDF5-File with priority
