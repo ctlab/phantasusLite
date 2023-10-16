@@ -17,3 +17,4 @@ Returns NULL
 \description{
 Creates \code{meta.txt} file, which describes typical dee2 files.
 }
+\keyword{internal}

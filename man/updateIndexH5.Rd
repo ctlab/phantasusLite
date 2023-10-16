@@ -19,3 +19,4 @@ Returns NULL
 \description{
 Updates indexes from HDF5-files
 }
+\keyword{internal}

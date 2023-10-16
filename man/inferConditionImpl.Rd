@@ -15,3 +15,4 @@ List of conditions and replicates
 \description{
 Creates condition from the samples titles
 }
+\keyword{internal}

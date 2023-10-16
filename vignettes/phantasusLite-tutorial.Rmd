@@ -1,0 +1,139 @@
+---
+title: "phantasusLite tutorial"
+output:
+  BiocStyle::html_document:
+    toc: true
+    toc_float: false
+vignette: >
+  %\VignetteIndexEntry{phantasusLite tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introduction
+
+The `phantasusLite` package contains a set functions that facilitate working with public 
+gene expression datasets originally developed for [phantasus package](https://bioconductor.org/packages/phantasus). Unlike `phantasus`, `phantasusLite` aims to limit the amount of dependencies.
+
+The current functionality includes:
+
+* Providing an interface to precomputed RNA-seq gene counts from ARCHS4 and DEE2 projects stored at remote HSDS repositories.
+* Inferring sample groups for cases when they are not provided in the original metadata.
+* Saving and loading expression matrices from GCT format.
+
+# Installation
+
+It is recommended to install the release version of the package from Bioconductor using the following commands:
+
+```{r eval=FALSE}
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("phantasusLite")
+```
+
+Alternatively, the most recent version of the package can be installed from the GitHub repository:
+
+```{r message=FALSE, eval=FALSE}
+library(devtools)
+install_github("ctlab/phantasusLite")
+```
+
+# Loading precomputed RNA-seq counts
+
+
+```{r message=FALSE, warning=FALSE}
+library(GEOquery)
+library(phantasusLite)
+```
+
+Let's load dataset GSE53053 from GEO using `GEOquery` package:
+
+```{r message=FALSE}
+ess <- getGEO("GSE53053")
+es <- ess[[1]]
+```
+
+RNA-seq dataset from GEO do not contain the expression matrix, thus `exprs(es)` is empty:
+
+```{r}
+head(exprs(es))
+```
+
+However, a number of precomputed gene count tables are available at HSDS server  '<https://ctlab.itmo.ru/hsds/>'. It features HDF5 files with counts
+from ARCHS4 and DEE2 projects:
+
+```{r}
+url <- 'https://ctlab.itmo.ru/hsds/?domain=/counts'
+getHSDSFileList(url)
+```
+
+GSE53053 dataset was sequenced from Arabidopsis thaliana and we can get an expression matrix 
+from the corresponding HDF5-file with DEE2 data:
+
+```{r}
+file <- "dee2/mmusculus_star_matrix_20221107.h5"
+es <- loadCountsFromH5FileHSDS(es, url, file)
+head(exprs(es))
+```
+
+Normally `loadCountsFromHSDS` can be used to automatically select the HDF5-file with the largest
+number of quantified samples:
+
+```{r}
+es <- ess[[1]]
+es <- loadCountsFromHSDS(es, url)
+head(exprs(es))
+```
+
+The counts are different from the previous values as ARCHS4 counts were used -- ARCHS4 is prioritized when there are several files with the same number of samples:
+
+```{r}
+preproc(experimentData(es))$gene_counts_source
+```
+
+# Inferring sample groups
+
+For some of the GEO datasets, such as GSE53053, the sample annotation is not fully available.
+However, frequently sample titles are structured in a way that allows to infer the groups.
+For example, for GSE53053 we can see there are three groups: Ctrl, MandIL4, MandLPSandIFNg,
+with up to 3 replicates:
+
+```{r}
+es$title
+```
+
+For such well-structured titles, `inferCondition` function can be used to automatically
+identify the sample conditions and replicates:
+
+```{r}
+es <- inferCondition(es)
+print(es$condition)
+print(es$replicate)
+```
+
+# Working with GCT files
+
+GCT text format can be used to store annotated gene expression matrices and load them in software 
+such as [Morpheus](https://software.broadinstitute.org/morpheus/) or [Phantasus](https://ctlab.itmo.ru/phantasus/).
+
+For example, we can save the `ExpressionSet` object that we defined previously:
+
+```{r}
+f <- file.path(tempdir(), "GSE53053.gct")
+writeGct(es, f)
+```
+
+And the load the file back:
+
+```{r}
+es2 <- readGct(f)
+print(es2)
+```
+
+# Session info
+
+```{r}
+sessionInfo()
+```
+```

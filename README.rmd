@@ -12,14 +12,19 @@ PhantasusLite -- a tool designed to integrate the work with RNA-Seq count matric
 
 ## Installation
 
-To install the package you should:
+It is recommended to install the release version of the package from Bioconductor using the following commands:
 
-1.  Install R-package rhdf5client from the github
-2.  Install R-package phantasusLite from the github
+```{r eval=FALSE}
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("phantasusLite")
+```
+
+Alternatively, the most recent version of the package can be installed from the GitHub repository:
 
 ```{r message=FALSE, eval=FALSE}
 library(devtools)
-install_github("assaron/rhdf5client")
 install_github("ctlab/phantasusLite")
 ```
 

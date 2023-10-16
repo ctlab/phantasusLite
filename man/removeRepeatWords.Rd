@@ -15,3 +15,4 @@ titles without repeated words
 \description{
 Removes repeated words from conditions
 }
+\keyword{internal}

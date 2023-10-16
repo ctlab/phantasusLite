@@ -17,3 +17,4 @@ Returns NULL
 Converts collection meta.txt files to meta.h5, putting them to the respective
 collection folders
 }
+\keyword{internal}

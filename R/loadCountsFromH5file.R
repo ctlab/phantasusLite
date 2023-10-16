@@ -1,8 +1,7 @@
 #' Gets chunk from GSE identifiers.
 #' @param samples, containing a list of samples
 #' @return list of chunks
-#'
-
+#' @keywords internal
 gsmToChunk <- function(samples) {
   chunks <- ifelse(nchar(samples) >= 7, substring(samples, 1, nchar(samples) - 4), "GSM0")
   return(paste0(chunks,"nnnn"))
@@ -54,7 +53,7 @@ loadCountsFromH5FileHSDS <- function(es, url='https://ctlab.itmo.ru/hsds/?domain
   metafilepath <- file.path(dirname(absPath), 'meta.h5', fsep="/")
   metaf <- HSDSFile(src, metafilepath)
   metads <- HSDSDataset(metaf, '/meta')
-  metatable <- metads[1:metads@shape]
+  metatable <- metads[seq_len(metads@shape)]
   h5_meta <- metatable[file_name == name]
 
   if (is.null(sampleIndexes)) {
@@ -68,7 +67,7 @@ loadCountsFromH5FileHSDS <- function(es, url='https://ctlab.itmo.ru/hsds/?domain
   gene_id <- strsplit(h5_meta$gene_id, split = ":")[[1]]
 
   dg <- HSDSDataset(f, gene_id[[2]])
-  genes <- dg[1:dg@shape]
+  genes <- dg[seq_len(dg@shape)]
 
 
 
@@ -77,7 +76,7 @@ loadCountsFromH5FileHSDS <- function(es, url='https://ctlab.itmo.ru/hsds/?domain
   smap <- smap[order(smap$sampleIndexes),]
   smap <- smap[!is.na(smap$sampleIndexes),]
 
-  h5Indexes = list(smap$sampleIndexes,
+  h5Indexes <- list(smap$sampleIndexes,
                    seq_len(length(genes)))
 
 
@@ -144,7 +143,7 @@ loadCountsFromHSDS <- function(es, url='https://ctlab.itmo.ru/hsds/?domain=/coun
   priorityfilepath <- paste(dir,"/priority.h5",sep="")
   priorityf <- HSDSFile(src, priorityfilepath)
   priorityds <- HSDSDataset(priorityf, '/priority')
-  priority <- data.table(priorityds[1:priorityds@shape])
+  priority <- data.table(priorityds[seq_len(priorityds@shape)])
   priority <- priority[, .(directory), keyby = priority]$directory
 
   metaindexpath <- paste(dir,"/index.h5",sep="")
@@ -153,7 +152,7 @@ loadCountsFromHSDS <- function(es, url='https://ctlab.itmo.ru/hsds/?domain=/coun
   DT_counts_meta_indexes <- data.table()
   for (chunk in sampleschunk) {
       indexds <- HSDSDataset(indexf, paste0('/',chunk))
-      DT_counts_meta_indexes <- rbind(DT_counts_meta_indexes, indexds[1:indexds@shape])
+      DT_counts_meta_indexes <- rbind(DT_counts_meta_indexes, indexds[seq_len(indexds@shape)])
   }
 
   sample_amount <- DT_counts_meta_indexes[accession %in% es$geo_accession, .(.N), by = list(file, type_fac = factor(x = collection_type, levels = priority))]

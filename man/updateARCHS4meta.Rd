@@ -17,3 +17,4 @@ Returns NULL
 \description{
 Creates \code{meta.txt} file, which describes typical archs4 and archs4Zoo files.
 }
+\keyword{internal}

@@ -1,6 +1,7 @@
 #' Removes repeated words from conditions
 #' @param titles, contains titles
 #' @return titles without repeated words
+#' @keywords internal
 removeRepeatWords <- function(titles) {
   titles_without_repeat_words <- titles
   repeat_words <- regmatches(titles, regexpr("(?![-+}\\]\\)])(\\W|_)*\\w*$", titles, ignore.case = TRUE, perl = TRUE))
@@ -15,6 +16,7 @@ removeRepeatWords <- function(titles) {
 #' Creates condition from the samples titles
 #' @param gse_titles, contains titles
 #' @return List of conditions and replicates
+#' @keywords internal
 inferConditionImpl <- function(gse_titles) {
   inferCondition <- gse_titles
   rep_num <- NULL

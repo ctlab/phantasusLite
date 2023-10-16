@@ -1,3 +1,0 @@
-file_name	sample_id	gene_id	gene_id_type
-human_matrix_v11.h5	/meta/samples/geo_accession	/meta/genes/genes	Gene Symbol
-mouse_matrix_v11.h5	/meta/samples/geo_accession	/meta/genes/genes	Gene Symbol

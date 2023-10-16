@@ -19,3 +19,4 @@ Returns NULL
 \description{
 Creates HDF5-File with priority
 }
+\keyword{internal}

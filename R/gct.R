@@ -7,17 +7,17 @@
 #' @return ExpressionSet object
 #'
 #' @examples
-#' es <- read.gct(system.file("testdata/gct/test.gct", package="phantasusLite"))
+#' es <- readGct(system.file("extdata/testdata/gct/test.gct", package="phantasusLite"))
 #' @export
-read.gct <- function(gct) {
+readGct <- function(gct) {
     meta <- readLines(gct, n = 3)
     version <- meta[1]
     size <- as.numeric(unlist(strsplit(meta[2], "\t")))
-    
+
     if (grepl("^#1.3", version)) {
         # number of column annotations = number of additional rows
         ann.col <- size[4]
-        
+
         # number of row annotations = number of additional columns
         ann.row <- size[3]
     } else if (grepl("^#1.2", version)) {
@@ -26,7 +26,7 @@ read.gct <- function(gct) {
     } else {
         stop("Unsupported version of gct: use 1.2 or 1.3")
     }
-    
+
     colNames <- unlist(strsplit(meta[3], "\t"))
     if (grepl("/", colNames[1])) {
         rowIdField <- sub("(.*)/(.*)", "\\1", colNames[1])
@@ -35,33 +35,33 @@ read.gct <- function(gct) {
         rowIdField <- "id"
         colIdField <- "id"
     }
-    
+
     colNames[1] <- rowIdField
-    
-    t <- fread(gct, 
-               sep="\t", col.names = colNames, 
+
+    t <- fread(gct,
+               sep="\t", col.names = colNames,
                skip = 2 + 1 + ann.col)
-    
-    
+
+
     rn <- t[[1]]
-    
+
     if (any(duplicated(rn))) {
         warning(sprintf("duplicated row IDs: %s; they were renamed",
                         paste0(rn[head(which(duplicated(rn)))], collapse = " ")))
         rn <- make.unique(rn)
     }
-    
+
     exp <- as.matrix(t[, (ann.row + 2):ncol(t)])
     rownames(exp) <- rn
-    
-    
-    
+
+
+
     fdata <- makeAnnotated(t[, seq_len(ann.row + 1), with=FALSE])
     rownames(fdata) <- rn
-    
-    
+
+
     if (ann.col > 0) {
-        pdata.raw <- t(fread(gct, skip = 2, nrows = ann.col + 1, header=FALSE, 
+        pdata.raw <- t(fread(gct, skip = 2, nrows = ann.col + 1, header=FALSE,
                    colClasses = "character"))
         pdata <- data.frame(pdata.raw[seq_len(ncol(exp)) + 1 + ann.row,],
                             stringsAsFactors = FALSE)
@@ -69,12 +69,12 @@ read.gct <- function(gct) {
         colnames(pdata)[1] <- colIdField
         rownames(pdata) <- colnames(exp)
         pdata <- makeAnnotated(pdata)
-        
+
         res <- ExpressionSet(exp, featureData = fdata, phenoData = pdata)
     } else {
         res <- ExpressionSet(exp, featureData = fdata)
     }
-    
+
     res
 }
 
@@ -85,12 +85,12 @@ read.gct <- function(gct) {
 #' @param gzip Whether to gzip apply gzip-compression for the output file#'
 #' @return Result of the closing file (as in `close()` function`)
 #' @examples
-#' es <- read.gct(system.file("testdata/gct/test.gct", package="phantasusLite"))
+#' es <- readGct(system.file("extdata/testdata/gct/test.gct", package="phantasusLite"))
 #' out <- tempfile(fileext = ".gct.gz")
-#' write.gct(es, out, gzip=TRUE)
+#' writeGct(es, out, gzip=TRUE)
 #' @import Biobase
 #' @export
-write.gct <- function(es, file, gzip=FALSE) {
+writeGct <- function(es, file, gzip=FALSE) {
     if (gzip) {
         con <- gzfile(file)
     } else {
@@ -98,26 +98,26 @@ write.gct <- function(es, file, gzip=FALSE) {
     }
     open(con, open="w")
     writeLines("#1.3", con)
-    
+
     pd <- pData(es)
     fd <- fData(es)
-    
+
     ann.col <- ncol(pData(es))
     ann.row <- ncol(fData(es))
-    writeLines(sprintf("%s\t%s\t%s\t%s", 
-                       nrow(es), ncol(es), 
+    writeLines(sprintf("%s\t%s\t%s\t%s",
+                       nrow(es), ncol(es),
                        ann.row-1, ann.col-1), con)
-    
+
     if (ann.col == 0 && ann.row == 0) {
         stop("There should be at least one row and one column annotation")
     }
-    
+
     idCols <- c(head(colnames(fd), 1), head(colnames(pd), 1))
     idCols <- unique(idCols)
     idCols <- paste0(idCols, collapse="/")
-        
+
     writeLines(paste0(c(idCols, tail(colnames(fd), -1), pd[[1]]), collapse="\t"), con)
-    
+
     ann.col.table <- t(as.matrix(pd[, tail(seq_along(pd), -1), drop=FALSE]))
     ann.col.table <- cbind(
         tail(colnames(pd), -1),
@@ -132,6 +132,7 @@ write.gct <- function(es, file, gzip=FALSE) {
 makeAnnotated <- function(data) {
     meta <- data.frame(labelDescription = colnames(data))
     rownames(meta) <- colnames(data)
-    
+
+    methods::new("AnnotatedDataFrame", data = data, varMeta = meta)
     methods::new("AnnotatedDataFrame", data = data, varMeta = meta)
 }

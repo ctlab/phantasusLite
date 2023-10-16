@@ -17,3 +17,4 @@ false if collection is not valid
 \description{
 Validates counts collection
 }
+\keyword{internal}

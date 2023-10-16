@@ -17,3 +17,4 @@ table with samples, indexes and chunks in all HDF5-files
 \description{
 Creates a data table with indexes and chunks of samples in remote HDF5-files
 }
+\keyword{internal}

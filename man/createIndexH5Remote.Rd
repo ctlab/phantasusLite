@@ -23,3 +23,4 @@ Returns NULL
 \description{
 Creates HDF5-file with indexes
 }
+\keyword{internal}

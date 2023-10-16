@@ -4,6 +4,7 @@
 #' @param dataset_name, contains dataset name
 #' @return Returns NULL
 #' @import rhdf5
+#' @keywords internal
 createH5 <- function(data, file, dataset_name) {
   stopifnot(requireNamespace("rhdf5"))
   if (file.exists(file)) {
@@ -20,6 +21,7 @@ createH5 <- function(data, file, dataset_name) {
 #' collection folders
 #' @param counts_dir, contains directory name
 #' @return Returns NULL
+#' @keywords internal
 createMetaH5 <- function(counts_dir){
   stopifnot(requireNamespace("rhdf5"))
   collections <- list.dirs(counts_dir, full.names = FALSE)
@@ -44,10 +46,11 @@ createMetaH5 <- function(counts_dir){
 #' @param force logical value which lets function replace existing priority file
 #' @param verbose logical value which determines a content of  the output.
 #' @return Returns NULL
+#' @keywords internal
 createPriorityH5 <- function(counts_dir, force = FALSE, verbose = FALSE){
   stopifnot(requireNamespace("rhdf5"))
   if (!dir.exists(counts_dir)) {
-    message(paste0('Counts directory ', counts_dir, " does not extist" ))
+    message('Counts directory ', counts_dir, " does not extist" )
     return()
   }
   h5_files <- list.files(file.path(counts_dir), "\\.h5$", full.names = TRUE, recursive = TRUE)
@@ -58,7 +61,7 @@ createPriorityH5 <- function(counts_dir, force = FALSE, verbose = FALSE){
   if (file.exists(priority_file)) {
     priority <- fread(priority_file)
     if (!(setequal(priority$directory,list_dirs) && length(unique(priority$priority)) == length(priority$priority))) {
-      message(paste0("!!! Priority file ", priority_file , " is invalid and will be replaced"))
+      message("!!! Priority file ", priority_file , " is invalid and will be replaced")
     } else {
       need_create <- FALSE
     }
@@ -76,10 +79,11 @@ createPriorityH5 <- function(counts_dir, force = FALSE, verbose = FALSE){
 #' @param force logical value which lets function replace existing index file
 #' @param verbose logical value which determines a content of  the output.
 #' @return Returns NULL
+#' @keywords internal
 updateIndexH5 <- function(counts_dir, force = FALSE, verbose = FALSE){
   stopifnot(requireNamespace("rhdf5"))
   if (!dir.exists(counts_dir)) {
-    message(paste0('Counts directory ', counts_dir, " does not extist" ))
+    message('Counts directory ', counts_dir, " does not extist" )
     return()
   }
   meta_name <- file.path(counts_dir, "meta.rda")
@@ -119,9 +123,9 @@ updateIndexH5 <- function(counts_dir, force = FALSE, verbose = FALSE){
         updateDEE2meta(destDir = dir_path)
       }
     }
-    message(paste0('Populating ', cur_dir , ' counts meta' ))
+    message('Populating ', cur_dir , ' counts meta' )
     if (!validateCountsCollection(collectionDir = dir_path, verbose = verbose)) {
-      message(paste0("!! files in ", cur_dir , " are ignored because there is not correct meta file in this directory."))
+      message("!! files in ", cur_dir , " are ignored because there is not correct meta file in this directory.")
       next
     }
     DT_part <- getCountsMetaPart(counts_dir = counts_dir, collection_name = cur_dir, verbose = verbose)
@@ -145,6 +149,7 @@ updateIndexH5 <- function(counts_dir, force = FALSE, verbose = FALSE){
 #' @param collection_name contains name of the collection
 #' @param verbose logical value which determines a content of  the output.
 #' @return list with metadata
+#' @keywords internal
 getCountsMetaPart <- function(counts_dir, collection_name, verbose){
   destdir <- file.path(counts_dir, collection_name)
   if (!dir.exists(destdir)) {
@@ -169,7 +174,7 @@ getCountsMetaPart <- function(counts_dir, collection_name, verbose){
       DT_h5_meta <- rbindlist(l = list(DT_h5_meta, h5_part))
     } else {
       if (verbose) {
-        message(paste0("!! ", file.path(destdir, input_file), " is ignored"))
+        message("!! ", file.path(destdir, input_file), " is ignored")
       }
     }
 
@@ -181,6 +186,7 @@ getCountsMetaPart <- function(counts_dir, collection_name, verbose){
 #' @param data, contains metadata
 #' @param file contains the file name
 #' @return Returns NULL
+#' @keywords internal
 createIndexH5 <- function(data, file) {
   stopifnot(requireNamespace("rhdf5"))
   h5createFile(file)
@@ -196,14 +202,15 @@ createIndexH5 <- function(data, file) {
 #' @param destDir path to directory with DEE2 .h5 files.
 #' @import data.table
 #' @return Returns NULL
+#' @keywords internal
 updateDEE2meta <- function(destDir = file.path(getOption("phantasusCacheDir"), "counts/dee2")){
   dee2files <- list.files(destDir, pattern = '\\.h5$')
   DT_meta <- data.frame(matrix(ncol = 4, nrow = length(dee2files), dimnames = list(NULL, c("file_name", "sample_id", "gene_id", "gene_id_type"))))
   DT_meta$file_name <- dee2files
   DT_meta$sample_id <- "/meta/samples/geo_accession"
   DT_meta$gene_id <- "/meta/genes/ensembl_gene_id"
-  genus <- sapply(strsplit(x = dee2files, split = "_"), function(x) x[1])
-  for (i_file in 1:length(dee2files)) {
+  genus <- vapply(strsplit(x = dee2files, split = "_"), function(x) x[1], character(1))
+  for (i_file in seq_along(dee2files)) {
     if (genus[i_file] %in% c("hsapiens", "mmusculus", "drerio", "rattus")) {
       DT_meta$gene_id_type[i_file] <- "ENSEMBLID"
       next
@@ -233,6 +240,7 @@ updateDEE2meta <- function(destDir = file.path(getOption("phantasusCacheDir"), "
 #' @param archDir path to directory with arch4 .h5 files.
 #' @import data.table
 #' @return Returns NULL
+#' @keywords internal
 updateARCHS4meta <- function(archDir = file.path(getOption("phantasusCacheDir"), "counts/archs4")){
   stopifnot(requireNamespace("rhdf5"))
   archs4files <- list.files(archDir, pattern = '\\.h5$')
@@ -240,7 +248,7 @@ updateARCHS4meta <- function(archDir = file.path(getOption("phantasusCacheDir"),
   DT_meta$file_name <- archs4files
   DT_meta$sample_id <- "/meta/Sample_geo_accession"
   DT_meta$gene_id <- "/meta/genes"
-  genus <- tolower(sapply(strsplit(x = archs4files, split = "_"), function(x) x[1]))
+  genus <- tolower(vapply(strsplit(x = archs4files, split = "_"), function(x) x[1], character(1)))
   for (i_file in seq_along(archs4files)) {
     cur_file <- file.path(archDir, archs4files[i_file])
     h5f <- H5Fopen(cur_file, flags = "H5F_ACC_RDONLY")
@@ -287,12 +295,12 @@ updateARCHS4meta <- function(archDir = file.path(getOption("phantasusCacheDir"),
 #' @param collectionDir contains directory name
 #' @param verbose logical value which determines a content of  the output.
 #' @return false if collection is not valid
-#'
+#' @keywords internal
 validateCountsCollection <- function(collectionDir, verbose=FALSE){
   stopifnot(requireNamespace("rhdf5"))
   if (!file.exists(file.path(collectionDir, "meta.txt"))) {
     if (verbose) {
-      message(paste0("metafile does not exist in ",  file.path(collectionDir)))
+      message("metafile does not exist in ",  file.path(collectionDir))
     }
     return(FALSE)
   }
@@ -303,7 +311,7 @@ validateCountsCollection <- function(collectionDir, verbose=FALSE){
     cur_meta <- h5_meta[file_name == input_file, ]
     if (nrow(cur_meta) > 1) {
       if (verbose) {
-        message(paste0("two or more rows in meta file for ", full_path ))
+        message("two or more rows in meta file for ", full_path )
       }
       return(FALSE)
     }
@@ -314,7 +322,7 @@ validateCountsCollection <- function(collectionDir, verbose=FALSE){
 
       if(!is_sample_valid){
         if (verbose) {
-          message(paste0("can't read sample_id in ", full_path ))
+          message("can't read sample_id in ", full_path)
         }
         return(FALSE)
       }
@@ -325,13 +333,13 @@ validateCountsCollection <- function(collectionDir, verbose=FALSE){
 
       if (length(gene_ids) == 0) {
         if (verbose) {
-          message(paste("can't read gene_id in ", full_path))
+          message("can't read gene_id in ", full_path)
         }
         return(FALSE)
       }
       if (length(gene_ids)  != length(unique(gene_ids))) {
         if (verbose) {
-          message(paste("Non-unique gene ids in file", full_path))
+          message("Non-unique gene ids in file ", full_path)
         }
         return(FALSE)
       }

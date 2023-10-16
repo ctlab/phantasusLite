@@ -17,3 +17,4 @@ Returns NULL
 \description{
 Writes indexes to the file
 }
+\keyword{internal}

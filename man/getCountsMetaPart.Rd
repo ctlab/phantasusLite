@@ -19,3 +19,4 @@ list with metadata
 \description{
 Gets list  with metadata
 }
+\keyword{internal}

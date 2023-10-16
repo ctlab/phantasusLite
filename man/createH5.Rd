@@ -19,3 +19,4 @@ Returns NULL
 \description{
 Creates metafiles for HDF5-files
 }
+\keyword{internal}

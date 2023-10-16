@@ -15,3 +15,4 @@ list of chunks
 \description{
 Gets chunk from GSE identifiers.
 }
+\keyword{internal}
