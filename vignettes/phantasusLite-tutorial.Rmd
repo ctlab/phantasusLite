@@ -68,7 +68,7 @@ url <- 'https://ctlab.itmo.ru/hsds/?domain=/counts'
 getHSDSFileList(url)
 ```
 
-GSE53053 dataset was sequenced from Arabidopsis thaliana and we can get an expression matrix 
+GSE53053 dataset was sequenced from *Mus musculus* and we can get an expression matrix 
 from the corresponding HDF5-file with DEE2 data:
 
 ```{r}
