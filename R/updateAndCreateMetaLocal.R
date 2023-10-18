@@ -3,7 +3,6 @@
 #' @param file, contains file name
 #' @param dataset_name, contains dataset name
 #' @return Returns NULL
-#' @import rhdf5
 #' @keywords internal
 createH5 <- function(data, file, dataset_name) {
   stopifnot(requireNamespace("rhdf5"))
@@ -11,9 +10,9 @@ createH5 <- function(data, file, dataset_name) {
     stop(sprintf("File %s already exist", file))
     # unlink(file, recursive = FALSE)
   }
-  h5createFile(file)
-  h5write(data, file, dataset_name)
-  H5close()
+  rhdf5::h5createFile(file)
+  rhdf5::h5write(data, file, dataset_name)
+  rhdf5::H5close()
   return(invisible(NULL))
 }
 
@@ -165,12 +164,12 @@ getCountsMetaPart <- function(counts_dir, collection_name, verbose){
     if (input_file %in% h5_meta$file_name) {
       full_name <- file.path(destdir, input_file)
       relative_path <- file.path(collection_name, input_file)
-      h5f <- H5Fopen(full_name, flags = "H5F_ACC_RDONLY")
-      accession <- h5read(h5f, h5_meta[file_name == input_file, ]$sample_id)
+      h5f <- rhdf5::H5Fopen(full_name, flags = "H5F_ACC_RDONLY")
+      accession <- rhdf5::h5read(h5f, h5_meta[file_name == input_file, ]$sample_id)
       h5_part <- data.table(accession = accession,
                             file = relative_path,
                             collection_type = collection_name, indexes = seq_along(accession))
-      H5Fclose(h5f)
+      rhdf5::H5Fclose(h5f)
       DT_h5_meta <- rbindlist(l = list(DT_h5_meta, h5_part))
     } else {
       if (verbose) {
@@ -189,10 +188,10 @@ getCountsMetaPart <- function(counts_dir, collection_name, verbose){
 #' @keywords internal
 createIndexH5 <- function(data, file) {
   stopifnot(requireNamespace("rhdf5"))
-  h5createFile(file)
+  rhdf5::h5createFile(file)
   names <- names(data)
   for (i in seq_along(names)) {
-    h5write(data[[i]], file, paste0("/",names[i]))
+    rhdf5::h5write(data[[i]], file, paste0("/",names[i]))
   }
   h5closeAll()
   return(invisible(NULL))
@@ -253,9 +252,9 @@ updateARCHS4meta <- function(archDir = file.path(getOption("phantasusCacheDir"),
     cur_file <- file.path(archDir, archs4files[i_file])
     h5f <- H5Fopen(cur_file, flags = "H5F_ACC_RDONLY")
     arch_version <- if (H5Lexists(h5f, "info/version")) {
-      h5read(h5f, "info/version")
+        rhdf5::h5read(h5f, "info/version")
     } else {
-      h5read(h5f, "meta/info/version")
+        rhdf5::h5read(h5f, "meta/info/version")
     }
     arch_version <- as.integer(arch_version)
     if (is.na(arch_version)) {
@@ -286,7 +285,7 @@ updateARCHS4meta <- function(archDir = file.path(getOption("phantasusCacheDir"),
     } else{
       DT_meta$gene_id_type[i_file] <- "gene"
     }
-    H5Fclose(h5f)
+    rhdf5::H5Fclose(h5f)
   }
   return(invisible(NULL))
 }
@@ -315,7 +314,7 @@ validateCountsCollection <- function(collectionDir, verbose=FALSE){
       }
       return(FALSE)
     }
-    h5f <- H5Fopen(full_path, flags = "H5F_ACC_RDONLY")
+    h5f <- rhdf5::H5Fopen(full_path, flags = "H5F_ACC_RDONLY")
 
     tryCatch({
       is_sample_valid <- H5Lexists(h5f, name =  cur_meta$sample_id)
@@ -327,8 +326,8 @@ validateCountsCollection <- function(collectionDir, verbose=FALSE){
         return(FALSE)
       }
 
-      gene_ids <- if (H5Lexists(h5f, name = cur_meta$gene_id)) {
-        h5read(h5f, name = cur_meta$gene_id)
+      gene_ids <- if (rhdf5::H5Lexists(h5f, name = cur_meta$gene_id)) {
+          rhdf5::h5read(h5f, name = cur_meta$gene_id)
       } else NULL
 
       if (length(gene_ids) == 0) {
@@ -344,7 +343,7 @@ validateCountsCollection <- function(collectionDir, verbose=FALSE){
         return(FALSE)
       }
     }, finally = {
-      H5Fclose(h5f)
+        rhdf5::H5Fclose(h5f)
     })
   }
   return(TRUE)
