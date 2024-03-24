@@ -51,7 +51,8 @@ readGct <- function(gct) {
         rn <- make.unique(rn)
     }
 
-    exp <- as.matrix(t[, (ann.row + 2):ncol(t)])
+    exp.cols <- (ann.row + 2):ncol(t)
+    exp <- as.matrix(t[, exp.cols, with=FALSE])
     rownames(exp) <- rn
 
 
