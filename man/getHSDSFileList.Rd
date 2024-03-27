@@ -5,7 +5,7 @@
 \title{Returns list of all HDF5-files on HSDS-server}
 \usage{
 getHSDSFileList(
-  url = "https://ctlab.itmo.ru/hsds/?domain=/counts",
+  url = "https://alserglab.wustl.edu/hsds/?domain=/counts",
   directory = NULL
 )
 }
@@ -21,7 +21,7 @@ List of all HDF5-files on the server or all files of the collection
 Returns list of all HDF5-files on HSDS-server
 }
 \examples{
-url <- 'https://ctlab.itmo.ru/hsds/?domain=/counts'
+url <- 'https://alserglab.wustl.edu/hsds/?domain=/counts'
 getHSDSFileList(url)
 
 }

@@ -58,7 +58,7 @@ createIndexH5Remote <- function(url,
                                 collections=c('archs4', 'dee2'),
                                 destfile="index.h5") {
   if (file.exists(destfile)) {
-    stop("File ", destfile, " alsready exists")
+    stop("File ", destfile, " already exists")
   }
 
   DT_h5_meta <- getIndexRemote(url, collections)

@@ -7,11 +7,11 @@
 #' @export
 #' @import rhdf5client
 #' @examples
-#' url <- 'https://ctlab.itmo.ru/hsds/?domain=/counts'
+#' url <- 'https://alserglab.wustl.edu/hsds/?domain=/counts'
 #' getHSDSFileList(url)
 #'
 
-getHSDSFileList <- function(url='https://ctlab.itmo.ru/hsds/?domain=/counts', directory = NULL) {
+getHSDSFileList <- function(url='https://alserglab.wustl.edu/hsds/?domain=/counts', directory = NULL) {
     src <- httr::parse_url(url)
     dir <- src$query$domain
     src <- paste0(src$scheme,'://',src$hostname,'/',src$path)

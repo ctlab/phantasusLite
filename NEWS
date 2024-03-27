@@ -1,0 +1,3 @@
+Changes in version 1.2.0
+* Switch to https://alserglab.wustl.edu/hsds remote for default HSDS server
+* Depending on rhdf5client >= 1.25.1 to support ARCHS4 v2.3 files

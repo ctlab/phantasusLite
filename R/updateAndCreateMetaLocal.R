@@ -35,6 +35,7 @@ createMetaH5 <- function(counts_dir){
       message("Skipping ", h5filename, " as it's already exists")
       next
     }
+    message("Creating ", h5filename)
     createH5(h5_meta, h5filename, 'meta')
   }
   return(invisible(NULL))
@@ -193,7 +194,7 @@ createIndexH5 <- function(data, file) {
   for (i in seq_along(names)) {
     rhdf5::h5write(data[[i]], file, paste0("/",names[i]))
   }
-  h5closeAll()
+  rhdf5::h5closeAll()
   return(invisible(NULL))
 }
 

@@ -1,7 +1,7 @@
 library(GEOquery)
 
 test_that("loadCountsFromHSDS works correctly", {
-  url <- "https://ctlab.itmo.ru/hsds/?domain=/counts"
+  url <- "https://alserglab.wustl.edu/hsds/?domain=/counts"
   ess <- getGEO("GSE85653", AnnotGPL = TRUE)
   es <- ess[[1]]
   es <- loadCountsFromHSDS(es, url)
@@ -21,7 +21,7 @@ test_that("loadCountsFromHSDS works correctly", {
 
 
 test_that("loadCountsFromHSDS returns the same ExpressionSet, if it contains counts matrix", {
-  url <- "https://ctlab.itmo.ru/hsds/?domain=/counts"
+  url <- "https://alserglab.wustl.edu/hsds/?domain=/counts"
   ess <- getGEO("GSE10010")
   es1 <- ess[[1]]
   es2 <- loadCountsFromHSDS(es1, url)
@@ -31,7 +31,7 @@ test_that("loadCountsFromHSDS returns the same ExpressionSet, if it contains cou
 
 
 test_that("loadCountsFromH5FileHSDS works without metadata params", {
-  url <- "https://ctlab.itmo.ru/hsds/?domain=/counts"
+  url <- "https://alserglab.wustl.edu/hsds/?domain=/counts"
   file <- 'archs4/Arabidopsis_thaliana_count_matrix.h5'
   ess <- getGEO("GSE85653", AnnotGPL = TRUE)
   es <- ess[[1]]

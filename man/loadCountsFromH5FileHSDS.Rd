@@ -6,7 +6,7 @@
 \usage{
 loadCountsFromH5FileHSDS(
   es,
-  url = "https://ctlab.itmo.ru/hsds/?domain=/counts",
+  url = "https://alserglab.wustl.edu/hsds/?domain=/counts",
   file,
   sampleIndexes = NULL
 )
@@ -29,7 +29,7 @@ Load count matrix from remote HDF5-file
 \examples{
 ess <- GEOquery::getGEO("GSE85653")
 es <- ess[[1]]
-url <- 'https://ctlab.itmo.ru/hsds/?domain=/counts'
+url <- 'https://alserglab.wustl.edu/hsds/?domain=/counts'
 file <- "/dee2/athaliana_star_matrix_20221107.h5"
 es <- loadCountsFromH5FileHSDS(es, url, file)
 }
