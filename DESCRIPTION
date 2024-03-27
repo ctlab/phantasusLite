@@ -1,7 +1,7 @@
 Package: phantasusLite
 Type: Package
-Title: Loading and annotation RNA-Seq counts matrices 
-Version: 1.1.0
+Title: Loading and annotation RNA-seq counts matrices 
+Version: 1.1.1
 Authors@R: c(person("Rita", "Sablina", role = "aut"),        
              person("Maxim", "Kleverov", role = "aut"),        
              person("Alexey", "Sergushichev", email = "alsergbox@gmail.com", role = c("aut", "cre")))
@@ -9,10 +9,10 @@ Description: PhantasusLite – a lightweight package with helper functions of ge
     extracted from phantasus package. In parituclar it simplifies working with public
     RNA-seq datasets from GEO by providing access to the remote
     HSDS repository with the precomputed gene counts from ARCHS4 and DEE2 projects.
-Depends: R (>= 4.3)
+Depends: R (>= 4.2)
 Imports: 
     data.table, 
-    rhdf5client(>= 1.21.5), 
+    rhdf5client(>= 1.25.1), 
     httr, stringr,
     stats, 
     utils, 
@@ -22,7 +22,7 @@ biocViews: GeneExpression, Transcriptomics, RNASeq
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Suggests: 
     testthat (>= 3.0.0), 
     knitr, 

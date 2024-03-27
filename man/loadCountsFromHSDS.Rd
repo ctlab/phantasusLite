@@ -4,7 +4,10 @@
 \alias{loadCountsFromHSDS}
 \title{Load count matrix from HDF5-files.}
 \usage{
-loadCountsFromHSDS(es, url = "https://ctlab.itmo.ru/hsds/?domain=/counts")
+loadCountsFromHSDS(
+  es,
+  url = "https://alserglab.wustl.edu/hsds/?domain=/counts"
+)
 }
 \arguments{
 \item{es, }{containing ExpressionSet loaded from GEO. Contains empty expression matrix.}
@@ -20,7 +23,7 @@ Load count matrix from HDF5-files.
 \examples{
 ess <- GEOquery::getGEO("GSE85653")
 es <- ess[[1]]
-url <- 'https://ctlab.itmo.ru/hsds/?domain=/counts'
+url <- 'https://alserglab.wustl.edu/hsds/?domain=/counts'
 es <- loadCountsFromHSDS(es, url)
 
 }

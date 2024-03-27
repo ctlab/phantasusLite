@@ -63,10 +63,10 @@ head(exprs(es))
 
 Function loadCountsFromHSDS returns an ExpressionSet with the expression matrix -- the second exprs(es) contains an expression matrix.
 
-The remote repository URL is '<https://ctlab.itmo.ru/hsds/?domain=/counts>'.
+The remote repository URL is '<https://alserglab.wustl.edu/hsds/?domain=/counts>'.
 
 ```{r}
-url <- 'https://ctlab.itmo.ru/hsds/?domain=/counts'
+url <- 'https://alserglab.wustl.edu/hsds/?domain=/counts'
 es <- loadCountsFromHSDS(es, url)
 head(exprs(es))
 ```

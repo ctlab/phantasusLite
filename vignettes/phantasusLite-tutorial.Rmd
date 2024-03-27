@@ -60,11 +60,11 @@ RNA-seq dataset from GEO do not contain the expression matrix, thus `exprs(es)` 
 head(exprs(es))
 ```
 
-However, a number of precomputed gene count tables are available at HSDS server  '<https://ctlab.itmo.ru/hsds/>'. It features HDF5 files with counts
+However, a number of precomputed gene count tables are available at HSDS server  '<https://alserglab.wustl.edu/hsds/>'. It features HDF5 files with counts
 from ARCHS4 and DEE2 projects:
 
 ```{r}
-url <- 'https://ctlab.itmo.ru/hsds/?domain=/counts'
+url <- 'https://alserglab.wustl.edu/hsds/?domain=/counts'
 getHSDSFileList(url)
 ```
 
@@ -91,6 +91,12 @@ The counts are different from the previous values as ARCHS4 counts were used -- 
 ```{r}
 preproc(experimentData(es))$gene_counts_source
 ```
+
+Further, gene symbols are also imported from ARCHS4 database and are available as feature data:
+```{r}
+head(fData(es))
+```
+
 
 # Inferring sample groups
 
