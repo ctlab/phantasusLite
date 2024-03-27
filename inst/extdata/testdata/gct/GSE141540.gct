@@ -1,0 +1,20 @@
+#1.3
+10	6	9	7
+id/title	Gene ID	Gene symbol	Mean	logFC	AveExpr	t	P.Value	adj.P.Val	B	Trp1 CD4+ TILs, Th condition sample 1	Trp1 CD4+ TILs, Th condition sample 2	Trp1 CD4+ TILs, Th condition sample 3	Trp1 CD4+ TILs, Th-ctx condition sample 1	Trp1 CD4+ TILs, Th-ctx condition sample 2	Trp1 CD4+ TILs, Th-ctx condition sample 3
+geo_accession	na	na	na	na	na	na	na	na	na	GSM4205863	GSM4205864	GSM4205865	GSM4205866	GSM4205867	GSM4205868
+tumour type	na	na	na	na	na	na	na	na	na	B16 melanoma	B16 melanoma	B16 melanoma	B16 melanoma	B16 melanoma	B16 melanoma
+tissue	na	na	na	na	na	na	na	na	na	tumour	tumour	tumour	tumour	tumour	tumour
+cell type	na	na	na	na	na	na	na	na	na	Foxp3GFP- CD4+ Trp-1 cells	Foxp3GFP- CD4+ Trp-1 cells	Foxp3GFP- CD4+ Trp-1 cells	Foxp3GFP- CD4+ Trp-1 cells	Foxp3GFP- CD4+ Trp-1 cells	Foxp3GFP- CD4+ Trp-1 cells
+condition	na	na	na	na	na	na	na	na	na	Trp1 CD4+ TILs, Th condition	Trp1 CD4+ TILs, Th condition	Trp1 CD4+ TILs, Th condition	Trp1 CD4+ TILs, Th-ctx condition	Trp1 CD4+ TILs, Th-ctx condition	Trp1 CD4+ TILs, Th-ctx condition
+replicate	na	na	na	na	na	na	na	na	na	1	2	3	1	2	3
+Comparison	na	na	na	na	na	na	na	na	na	Reference	Reference	Reference	Target	Target	Target
+1424733_at	140795	P2ry14	6.5372	2.5902	6.5372	22.565	5.6834e-8	0.00056834	8.5214	5.1463	5.1581	5.4219	7.7382	7.9779	7.7807
+1454617_at	105171	Arrdc3	7.2280	1.6425	7.2280	16.489	5.2864e-7	0.0011748	6.8493	6.3730	6.5109	6.3363	7.9909	8.1878	7.9691
+1417398_at	66922	Rras2	7.8840	1.7922	7.8840	16.300	5.7363e-7	0.0011748	6.7817	7.0530	6.8373	7.0735	8.7226	8.9318	8.6858
+1453851_a_at	23882	Gadd45g	8.3413	1.7310	8.3413	15.727	7.3830e-7	0.0011748	6.5705	7.4854	7.4522	7.4898	9.3597	9.0003	9.2604
+1425570_at	27218	Slamf1	10.426	1.6919	10.426	15.548	8.0041e-7	0.0011748	6.5021	9.4423	9.5518	9.7448	11.209	11.387	11.219
+1444426_at	320664	Cass4	8.0858	2.7655	8.0858	15.402	8.5528e-7	0.0011748	6.4456	6.4620	6.9625	6.6846	9.6524	9.6129	9.1403
+1421186_at	12772	Ccr2	10.542	2.8435	10.542	14.877	0.0000010916	0.0011748	6.2358	8.6917	9.4154	9.2545	11.902	12.137	11.853
+1424638_at	12575	Cdkn1a	11.190	2.0431	11.190	14.841	0.0000011104	0.0011748	6.2210	9.8865	10.332	10.286	12.115	12.189	12.330
+1424727_at	12774	Ccr5	10.375	2.7007	10.375	14.636	0.0000012246	0.0011748	6.1358	8.6012	9.3384	9.1356	11.742	11.811	11.624
+1435436_at	13819	Epas1	9.1513	1.8468	9.1513	14.454	0.0000013374	0.0011748	6.0587	8.1762	8.2527	8.2547	9.8769	10.336	10.011

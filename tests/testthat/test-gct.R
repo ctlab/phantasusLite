@@ -51,3 +51,10 @@ test_that("writeGct and readGct support id column names", {
     expect_identical(fData(es), fData(es2))
     expect_identical(pData(es), pData(es2))
 })
+
+
+test_that("readGct column indexing works with GSE141540.gct file", {
+    gctFile <- system.file("extdata/testdata/gct/GSE141540.gct", package="phantasusLite")
+    expect_silent(es <- readGct(gctFile))
+})
+
