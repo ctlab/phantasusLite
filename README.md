@@ -28,6 +28,15 @@ library(devtools)
 install_github("ctlab/phantasusLite")
 ```
 
+Note that the latest version depends on `rhdfclient5 >= 1.25.1` from
+Bioconductor 3.19, which on older systems can be more convenient to
+install from GitHub:
+
+``` r
+library(devtools)
+install_github("vjcitn/rhdf5client")
+```
+
 ## Dependencies
 
 To run the code you need:
@@ -64,14 +73,13 @@ head(exprs(es))
     ##      GSM1281306 GSM1281307
 
 Function loadCountsFromHSDS returns an ExpressionSet with the expression
-matrix – the second exprs(es) contains an expression matrix.
-
-The remote repository URL is
+matrix – now `exprs(es)` contains an expression matrix. The default
+remote repository URL is
 ‘<https://alserglab.wustl.edu/hsds/?domain=/counts>’.
 
 ``` r
-url <- 'https://alserglab.wustl.edu/hsds/?domain=/counts'
-es <- loadCountsFromHSDS(es, url)
+# `url` is explicitly specified for illustration purposes and can be omitted
+es <- loadCountsFromHSDS(es, url = 'https://alserglab.wustl.edu/hsds/?domain=/counts')
 head(exprs(es))
 ```
 
