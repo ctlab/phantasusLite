@@ -33,10 +33,10 @@ getSamples <- function(h5f, samples_id) {
 #' @import rhdf5client
 #'
 #' @examples
-#' ess <- GEOquery::getGEO("GSE85653")
+#' ess <- GEOquery::getGEO("GSE53053")
 #' es <- ess[[1]]
 #' url <- 'https://alserglab.wustl.edu/hsds/?domain=/counts'
-#' file <- "/dee2/athaliana_star_matrix_20221107.h5"
+#' file <- "/dee2/mmusculus_star_matrix_20240409.h5"
 #' es <- loadCountsFromH5FileHSDS(es, url, file)
 loadCountsFromH5FileHSDS <- function(es, url='https://alserglab.wustl.edu/hsds/?domain=/counts', file, sampleIndexes = NULL) {
   if (nrow(es) > 0) {
