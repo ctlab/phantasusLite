@@ -72,7 +72,7 @@ GSE53053 dataset was sequenced from *Mus musculus* and we can get an expression 
 from the corresponding HDF5-file with DEE2 data:
 
 ```{r}
-file <- "dee2/mmusculus_star_matrix_20221107.h5"
+file <- "dee2/mmusculus_star_matrix_20240409.h5"
 es <- loadCountsFromH5FileHSDS(es, url, file)
 head(exprs(es))
 ```
