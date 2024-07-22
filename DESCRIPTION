@@ -1,7 +1,7 @@
 Package: phantasusLite
 Type: Package
 Title: Loading and annotation RNA-seq counts matrices 
-Version: 1.3.0
+Version: 1.3.2
 Authors@R: c(person("Rita", "Sablina", role = "aut"),        
              person("Maxim", "Kleverov", role = "aut"),        
              person("Alexey", "Sergushichev", email = "alsergbox@gmail.com", role = c("aut", "cre")))
