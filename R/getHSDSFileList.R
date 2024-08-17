@@ -45,3 +45,22 @@ getHSDSFileList <- function(url='https://alserglab.wustl.edu/hsds/?domain=/count
     hdf5FileList <- grep(".*\\.h5$", hdf5FileList, value = TRUE)
     return(hdf5FileList)
 }
+
+
+#' check if url  responding as HSDS server
+#' TRUE - hsds
+#' FALSE - web link but not working
+#' NULL - not web link
+#' @param url URL to check
+#' @keywords internal
+
+isHSDS <- function(url){
+    if(!grepl(pattern = "^http(s)?://", x = url)){
+        return(NULL)
+    }
+    req <- httr::GET(url)
+    if( req$headers$server == "Highly Scalable Data Service (HSDS)"){
+        return(TRUE)
+    }
+    return(FALSE)
+}

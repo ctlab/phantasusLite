@@ -93,4 +93,3 @@ inferCondition <- function(es) {
   }
   return(es)
 }
-

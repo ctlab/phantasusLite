@@ -38,7 +38,7 @@ getGEODir <- function(name, destdir = file.path(tempdir(), "geo")) {
 }
 
 # ------------------------------------------------------------------------------
-# Brief data utils
+# Utils for brief data 
 # ------------------------------------------------------------------------------
 parseBriefData <- function(txt) {
   tmp <- txt[grep("!\\w*?_", txt)]
@@ -229,5 +229,3 @@ checkGPLsFallback <- function(name, destdir = tempdir(), mirrorPath = tempdir())
     return(jsonlite::toJSON(c()))
   })
 }
-
-
