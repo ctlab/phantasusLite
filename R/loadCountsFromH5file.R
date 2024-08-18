@@ -260,3 +260,75 @@ loadCountsFromH5File <- function(es, counts_dir) {
   H5Fclose(h5f)
   return(es2)
 }
+
+#' Loads expression data from .h5 count files.
+#' Only samples with counted expression are kept.
+#' If es already containts expression data it is returned as is.
+#' @param es ExpressionSet from GEO to check for expression in ARCHS4/dee2 or other h5 files
+#' @param counts_dir directory with  .h5 files  collections. There must be meta.rda file
+#' in counts_dir and each collection's sub directory must have meta.txt file with description.
+#' Also \code{counts_dir} must contain \code{counts_priority.txt} file.
+#' @return either original es or an ExpressionSet with loaded count data from ARCHS4
+#' @import data.table
+loadCounts <- function(es, counts_dir) {
+  if (!file.exists(file.path(counts_dir, "counts_priority.txt"))) {
+    return(es)
+  }
+  priority <- fread(file.path(counts_dir, "counts_priority.txt"))[, .(directory), keyby = priority]$directory
+  if (nrow(es) > 0) {
+    return(es)
+  }
+  load(paste(counts_dir,"meta.rda",sep = "/"))
+  sample_amount <- DT_counts_meta[accession %in% es$geo_accession,
+                                  .(.N),
+                                  by = list(file, type_fac = factor(x = collection_type, levels = priority))]
+  if (nrow(sample_amount) == 0) {
+    return(es)
+  }
+  setorderv(x = sample_amount,cols = c("N","type_fac"),order = c(-1,1))
+  destfile <- sample_amount[,.SD[1]]$file
+  destfile <- file.path(counts_dir, destfile)
+  h5_meta <- fread(file.path(dirname(destfile), "meta.txt"), index = "file_name")[file_name == basename(destfile)]
+  h5f <- H5Fopen(destfile, flags = "H5F_ACC_RDONLY")
+  samples <- h5read(h5f, h5_meta$sample_id)
+  sampleIndexes <- match(es$geo_accession,
+                         samples)
+  
+  gene_id <- strsplit(h5_meta$gene_id, split = ":")[[1]]
+  genes <- as.character(h5read(h5f,gene_id[2]))
+  h5Indexes = list(stats::na.omit(sampleIndexes),
+                   seq_len(length(genes)))
+  expression <- NULL
+  if (h5_meta$sample_dim == "rows"){
+    expression <- h5read(h5f,
+                         "data/expression",
+                         index = h5Indexes)
+    expression <- t(expression)
+  } else {
+    expression <- h5read(h5f,
+                         "data/expression",
+                         index = rev(h5Indexes))
+  }
+  rownames(expression) <- genes
+  colnames(expression) <- colnames(es)[!is.na(sampleIndexes)]
+  es2 <- ExpressionSet(assayData = expression,
+                       phenoData = phenoData(es[, !is.na(sampleIndexes)]),
+                       annotation = annotation(es),
+                       experimentData = experimentData(es)
+  )
+  genes_annot <- strsplit(h5_meta$genes_annot, split = ";")[[1]]
+  genes_annot <- unlist( lapply(strsplit(genes_annot, split = ":"), function(annot){
+    setNames(annot[2], annot[1])
+  }))
+  
+  genes_annot <- lapply(genes_annot, function(annot){
+    tryCatch({
+      as.character(h5read(h5f, annot))
+    }, error = function(e) {})
+  })
+  genes_annot [[gene_id[1]]] <- rownames(es2)
+  genes_annot <- genes_annot[!unlist(lapply(genes_annot, is.null))]
+  fData(es2) <- cbind(fData(es2), genes_annot )
+  H5Fclose(h5f)
+  return(es2)
+}
