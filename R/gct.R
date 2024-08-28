@@ -55,6 +55,14 @@ readGct <- function(gct) {
     exp <- as.matrix(t[, exp.cols, with=FALSE])
     rownames(exp) <- rn
 
+    cn <- colnames(exp)
+    if (any(duplicated(cn))) {
+        warning(sprintf("duplicated row IDs: %s; they were renamed",
+                        paste0(cn[head(which(duplicated(cn)))], collapse = " ")))
+        cn <- make.unique(cn)
+        colnames(exp) <- cn
+    }
+    
 
 
     fdata <- makeAnnotated(t[, seq_len(ann.row + 1), with=FALSE])

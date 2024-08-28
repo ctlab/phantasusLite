@@ -20,8 +20,12 @@ test_that("readGct works with gct #1.2", {
     expect_true(ncol(t) == 4)
 })
 
-test_that("readGct works with duplicate row names", {
+test_that("readGct works with duplicate row or column names", {
     gctFile <- system.file("extdata/testdata/gct/test_dup.gct", package="phantasusLite")
+    expect_warning(t <- readGct(gctFile), "duplicate")
+    expect_true(!is.null(t))
+    
+    gctFile <- system.file("extdata/testdata/gct/test_dupcol.gct", package="phantasusLite")
     expect_warning(t <- readGct(gctFile), "duplicate")
     expect_true(!is.null(t))
 })
