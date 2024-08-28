@@ -69,7 +69,8 @@ readGct <- function(gct) {
     rownames(fdata) <- rn
 
 
-    if (ann.col > 0) {
+    # parse pData
+    {
         pdata.raw <- t(fread(gct, skip = 2, nrows = ann.col + 1, header=FALSE,
                    colClasses = "character"))
         pdata <- data.frame(pdata.raw[seq_len(ncol(exp)) + 1 + ann.row,],
@@ -80,9 +81,7 @@ readGct <- function(gct) {
         pdata <- makeAnnotated(pdata)
 
         res <- ExpressionSet(exp, featureData = fdata, phenoData = pdata)
-    } else {
-        res <- ExpressionSet(exp, featureData = fdata)
-    }
+    } 
 
     res
 }
@@ -117,7 +116,7 @@ writeGct <- function(es, file, gzip=FALSE) {
                        nrow(es), ncol(es),
                        ann.row-1, ann.col-1), con)
 
-    if (ann.col == 0 && ann.row == 0) {
+    if (ann.col == 0 || ann.row == 0) {
         stop("There should be at least one row and one column annotation")
     }
 

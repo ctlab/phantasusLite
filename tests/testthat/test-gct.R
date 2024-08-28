@@ -56,6 +56,12 @@ test_that("writeGct and readGct support id column names", {
     expect_identical(pData(es), pData(es2))
 })
 
+test_that("readGct support emptry annotations", {
+    gctFile <- system.file("extdata/testdata/gct/centers.gct", package="phantasusLite")
+    es <- readGct(gctFile)
+    expect_true(ncol(fData(es)) >= 1)
+    expect_true(ncol(pData(es)) >= 1)
+})
 
 test_that("readGct column indexing works with GSE141540.gct file", {
     gctFile <- system.file("extdata/testdata/gct/GSE141540.gct", package="phantasusLite")
